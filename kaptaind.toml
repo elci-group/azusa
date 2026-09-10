@@ -1,0 +1,47 @@
+# kaptaind configuration — azusa
+#
+# Milestone-driven workflow: the daemon is started only when a milestone is
+# ready to be committed (tests green, uni analysis reviewed). It clusters the
+# pending change, runs `cargo test`, commits with a semantic message, bumps
+# VERSION, and pushes to origin/main.
+
+[watch]
+path = "."
+recursive = true
+ignore_file = ".kaptainignore"
+
+[cluster]
+window = 5
+
+[weights]
+s = 0.35
+a = 0.30
+d = 0.20
+r = 0.15
+
+[trust]
+# Opt in to the configured [test] hook after review (cargo test only).
+execution = "trusted"
+
+[operation]
+mode = "actuate"
+
+[push]
+enabled = true
+branch = "main"
+
+[capabilities]
+network_push = true
+
+[ratelimit]
+min_commit_interval = 10
+
+[test]
+# This workstation shadows rustup with a distro rustc at /usr/bin; pin the
+# rustup toolchain (and its rustdoc libLLVM dir) so daemon builds and test
+# hooks match interactive builds.
+command = "PATH=\"$HOME/.cargo/bin:$PATH\" LD_LIBRARY_PATH=/usr/lib/rustlib/x86_64-unknown-linux-gnu/lib cargo test"
+required = true
+
+[staging]
+mode = "all"

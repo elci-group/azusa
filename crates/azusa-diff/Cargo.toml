@@ -1,0 +1,15 @@
+[package]
+name = "azusa-diff"
+description = "Azusa comparison primitives: fileset diffs, rename detection, line deltas, change clustering"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+azusa-model = { path = "../azusa-model" }
+
+[lints]
+workspace = true

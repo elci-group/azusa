@@ -1,0 +1,36 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/azusa-cli",
+    "crates/azusa-core",
+    "crates/azusa-diff",
+    "crates/azusa-elci",
+    "crates/azusa-fs",
+    "crates/azusa-git",
+    "crates/azusa-graph",
+    "crates/azusa-model",
+    "crates/azusa-policy",
+    "crates/azusa-store",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+authors = ["The azusa Authors"]
+repository = "https://github.com/elci-group/azusa"
+homepage = "https://github.com/elci-group/azusa"
+rust-version = "1.85"
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+missing_docs = "warn"
+
+[workspace.lints.clippy]
+all = { level = "warn", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+strip = "symbols"
