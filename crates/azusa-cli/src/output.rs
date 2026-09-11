@@ -98,6 +98,10 @@ pub fn report_to_ndjson(report: &DriftReport) -> String {
 }
 
 /// Human-readable drift report.
+///
+/// Linear section-by-section rendering; length is presentation breadth,
+/// not complexity.
+#[allow(clippy::too_many_lines)]
 #[must_use]
 pub fn report_to_human(report: &DriftReport) -> String {
     let mut out = String::new();
@@ -155,6 +159,27 @@ pub fn report_to_human(report: &DriftReport) -> String {
             if let Some(score) = report.score.layers.get(&layer) {
                 out.push_str(&format!("  {:<14} {:>5.2}\n", layer.as_str(), score));
             }
+        }
+    }
+
+    if !report.clusters.is_empty() {
+        out.push_str("\nChange clusters\n");
+        for cluster in report.clusters.iter().take(10) {
+            out.push_str(&format!(
+                "  {:<24} {:<14} {} file(s)\n",
+                cluster.label,
+                cluster.kind.as_str(),
+                cluster.files
+            ));
+            for path in cluster.paths.iter().take(3) {
+                out.push_str(&format!("      {path}\n"));
+            }
+        }
+        if report.clusters.len() > 10 {
+            out.push_str(&format!(
+                "      … and {} more clusters\n",
+                report.clusters.len() - 10
+            ));
         }
     }
 

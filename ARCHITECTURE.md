@@ -52,6 +52,34 @@ scoring module, each documented and unit-tested):
 Timestamps appear only in provenance, never inside the deterministic
 analysis path.
 
+## Structural layers (L3–L5)
+
+`azusa-graph::enrich` fills the structure, dependency and configuration
+facets from the filesystem listing and `captured_text` (retained UTF-8 of
+analysis-interest files, ≤128 KiB each):
+
+- **L3 structure** — Cargo manifests → modules (workspace / library /
+  binary, refined by `src/lib.rs` autodetection), directory topology.
+- **L4 dependencies** — declared deps per manifest with lockfile-resolved
+  versions; version transitions classified major/minor/patch; lockfile
+  divergence tracked separately.
+- **L5 configuration** — config files classified by kind
+  (ci-workflow, dockerfile, kubernetes, systemd-unit, compose, formatter,
+  linter, environment, cargo-manifest); kind weights severity
+  (deployment-config changes outweigh formatter tweaks).
+
+Layer scores: structure `10·c/(c+10)` with `c = added + 2·removed +
+0.2·dir-churn`; dependency `10·c/(c+8)` with `c = 3·major + 2·minor +
+1·patch + 1.5·added-or-removed + 1·lockfile-diverged`; configuration
+`10·c/(c+6)` with per-kind weights (2.5 deploy/CI … 0.5 formatting).
+
+## Change clustering
+
+`azusa-diff::cluster` assigns every changed path to a labeled cluster
+(lockfiles, manifests, tests, docs, operations, configuration,
+`crates/<name>`, top-level module). Clusters are part of the report
+artefact and power `azusa explain`.
+
 ## State resolution
 
 `worktree` · `index` · `head` · `upstream` · `remote` (origin/HEAD →

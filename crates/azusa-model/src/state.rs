@@ -283,7 +283,7 @@ pub struct DependencyState {
 }
 
 /// Classification of configuration files of interest.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum ConfigurationKind {
     /// `Cargo.toml` (workspace or package manifest).
@@ -380,6 +380,57 @@ pub struct RepositoryState {
     pub configuration: ConfigurationState,
     /// Behaviour facet, when behaviour analysis ran.
     pub behaviour: Option<BehaviourState>,
+    /// Raw UTF-8 text of analysis-interest files (manifests, lockfiles,
+    /// configuration), captured by the provider while hashing. Small by
+    /// construction (size-capped); lets structural analysis stay a pure
+    /// function of the state.
+    #[serde(default)]
+    pub captured_text: BTreeMap<String, String>,
+}
+
+/// Maximum retained text size per analysis-interest file (128 KiB). Files
+/// larger than this are compared by hash only.
+pub const CAPTURED_TEXT_MAX_BYTES: usize = 128 * 1024;
+
+/// Whether a repository path is of structural-analysis interest, so
+/// providers retain its text in [`RepositoryState::captured_text`].
+///
+/// Interest = Cargo manifests and lockfiles, toolchain and formatter/linter
+/// configuration, CI workflows, container and service definitions — the
+/// files whose *text* (not just hash) feeds layers L3–L5.
+#[must_use]
+pub fn is_analysis_file(path: &str) -> bool {
+    let name = path.rsplit('/').next().unwrap_or(path);
+    let matches_name = |candidates: &[&str]| candidates.contains(&name);
+    if matches_name(&[
+        "Cargo.toml",
+        "Cargo.lock",
+        "rust-toolchain",
+        "rust-toolchain.toml",
+        "rustfmt.toml",
+        ".rustfmt.toml",
+        "clippy.toml",
+        "deny.toml",
+        ".editorconfig",
+        ".env.example",
+        "docker-compose.yml",
+        "docker-compose.yaml",
+        "compose.yml",
+        "compose.yaml",
+    ]) {
+        return true;
+    }
+    if name.starts_with("Dockerfile") {
+        return true;
+    }
+    if path.starts_with(".github/workflows/")
+        && std::path::Path::new(name)
+            .extension()
+            .is_some_and(|ext| ext.eq_ignore_ascii_case("yml") || ext.eq_ignore_ascii_case("yaml"))
+    {
+        return true;
+    }
+    name.ends_with(".service")
 }
 
 impl RepositoryState {
@@ -402,6 +453,7 @@ impl RepositoryState {
             dependencies: DependencyState::default(),
             configuration: ConfigurationState::default(),
             behaviour: None,
+            captured_text: BTreeMap::new(),
         }
     }
 }
@@ -423,6 +475,18 @@ mod tests {
         assert_eq!(FileKind::File.mode_string(false), "100644");
         assert_eq!(FileKind::File.mode_string(true), "100755");
         assert_eq!(FileKind::Symlink.mode_string(false), "120000");
+    }
+
+    #[test]
+    fn analysis_interest_predicate() {
+        assert!(is_analysis_file("Cargo.toml"));
+        assert!(is_analysis_file("crates/foo/Cargo.toml"));
+        assert!(is_analysis_file("Cargo.lock"));
+        assert!(is_analysis_file(".github/workflows/ci.yml"));
+        assert!(is_analysis_file("deploy/Dockerfile"));
+        assert!(is_analysis_file("deploy/api.service"));
+        assert!(!is_analysis_file("src/main.rs"));
+        assert!(!is_analysis_file("docs/ci.md"));
     }
 
     #[test]

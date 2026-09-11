@@ -12,6 +12,26 @@ use std::path::{Path, PathBuf};
 
 use git2::{IndexAddOption, Repository, Signature};
 
+fn walk_tree_paths(tree: &git2::Tree, out: &mut std::collections::BTreeSet<String>) {
+    tree.walk(
+        git2::TreeWalkMode::PreOrder,
+        &mut |root: &str, entry: &git2::TreeEntry| {
+            if let Some(name) = entry.name() {
+                let path = if root.is_empty() {
+                    name.to_owned()
+                } else if root.ends_with('/') {
+                    format!("{root}{name}")
+                } else {
+                    format!("{root}/{name}")
+                };
+                out.insert(path);
+            }
+            git2::TreeWalkResult::Ok
+        },
+    )
+    .ok();
+}
+
 /// A temporary Git repository with helper methods for building history.
 pub struct FixtureRepo {
     /// Repository worktree path.
@@ -115,6 +135,72 @@ impl FixtureRepo {
         self.repo
             .commit(Some("HEAD"), &sig, &sig, message, &tree, &parent_refs)
             .expect("commit")
+    }
+
+    /// Point the remote-tracking ref at the current HEAD (simulating a
+    /// pushed, up-to-date upstream).
+    pub fn sync_remote(&self) {
+        let head = self.repo.head().expect("head").target().expect("oid");
+        self.repo
+            .reference("refs/remotes/origin/main", head, true, "fixture")
+            .expect("sync remote");
+    }
+
+    /// Advance the remote-tracking ref by committing several files on top of
+    /// the current remote state.
+    pub fn advance_remote_files(&self, files: &[(&str, &str)], message: &str) -> git2::Oid {
+        let remote_ref = self
+            .repo
+            .find_reference("refs/remotes/origin/main")
+            .expect("remote ref");
+        let base = remote_ref.peel_to_commit().expect("remote commit");
+        for (rel, content) in files {
+            self.write(rel, content);
+        }
+        let mut index = self.repo.index().expect("index");
+        for (rel, _) in files {
+            index.add_path(Path::new(rel)).expect("add");
+        }
+        index.write().expect("index write");
+        let tree_oid = index.write_tree().expect("tree");
+        let tree = self.repo.find_tree(tree_oid).expect("find tree");
+        let sig = Signature::now("Azusa Test", "azusa@test.local").expect("signature");
+        let oid = self
+            .repo
+            .commit(None, &sig, &sig, message, &tree, &[&base])
+            .expect("commit");
+        self.repo
+            .reference("refs/remotes/origin/main", oid, true, "fixture")
+            .expect("advance remote");
+        // Restore the worktree to HEAD (local state), removing leftovers.
+        let mut index = self.repo.index().expect("index");
+        let head_tree = self
+            .repo
+            .head()
+            .expect("head")
+            .peel_to_tree()
+            .expect("tree");
+        index.read_tree(&head_tree).expect("read tree");
+        index.write().expect("index write");
+        self.repo
+            .checkout_head(Some(git2::build::CheckoutBuilder::new().force()))
+            .ok();
+        // Remove only files that exist solely in the remote commit; files
+        // tracked by HEAD were already restored by the checkout.
+        let head_tree = self
+            .repo
+            .head()
+            .expect("head")
+            .peel_to_tree()
+            .expect("tree");
+        let mut head_paths = std::collections::BTreeSet::new();
+        walk_tree_paths(&head_tree, &mut head_paths);
+        for (rel, _) in files {
+            if !head_paths.contains(*rel) {
+                std::fs::remove_file(self.path.join(rel)).ok();
+            }
+        }
+        oid
     }
 
     /// Stage a single path without committing.

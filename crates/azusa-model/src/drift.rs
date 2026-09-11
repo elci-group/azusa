@@ -370,6 +370,66 @@ pub struct IntentAssessment {
     pub signals: Vec<IntentSignal>,
 }
 
+/// Classification of a logical change cluster.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ClusterKind {
+    /// Dependency lockfiles.
+    Lockfile,
+    /// Package manifests.
+    Manifest,
+    /// Tests and test fixtures.
+    Tests,
+    /// Documentation.
+    Documentation,
+    /// Project configuration (formatting, linting).
+    Configuration,
+    /// Deployment, CI and service configuration.
+    Operations,
+    /// A source module or crate.
+    Module,
+    /// Anything else.
+    Other,
+}
+
+impl ClusterKind {
+    /// Canonical kebab-case name.
+    #[must_use]
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Lockfile => "lockfile",
+            Self::Manifest => "manifest",
+            Self::Tests => "tests",
+            Self::Documentation => "documentation",
+            Self::Configuration => "configuration",
+            Self::Operations => "operations",
+            Self::Module => "module",
+            Self::Other => "other",
+        }
+    }
+}
+
+/// One logical cluster of changed paths: "147 changed lines" becomes
+/// "authentication, migrations, CLI, tests, formatting".
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ChangeCluster {
+    /// Human label (e.g. `crates/azusa-core`, `tests`, `ci`).
+    pub label: String,
+    /// Cluster classification.
+    pub kind: ClusterKind,
+    /// Changed paths in this cluster (capped listing).
+    pub paths: Vec<String>,
+    /// Total changed paths in this cluster.
+    pub files: u64,
+    /// Added paths.
+    pub added: u64,
+    /// Deleted paths.
+    pub deleted: u64,
+    /// Modified paths.
+    pub modified: u64,
+    /// Renamed paths.
+    pub renamed: u64,
+}
+
 /// Headline numbers of a comparison, for quick human and machine scanning.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub struct DriftSummary {
@@ -476,6 +536,9 @@ pub struct DriftReport {
     pub intent: Option<IntentAssessment>,
     /// Recommended actions.
     pub recommendations: Vec<Recommendation>,
+    /// Logical change clusters (phase 2).
+    #[serde(default)]
+    pub clusters: Vec<ChangeCluster>,
     /// Report provenance.
     pub provenance: Provenance,
 }

@@ -7,11 +7,13 @@
 //! too (see `cluster`), so "147 changed lines" can become "five logical
 //! change clusters".
 
+pub mod cluster;
 pub mod fileset;
 pub mod similarity;
 
+pub use cluster::{classify, cluster};
 pub use fileset::{FilesetDiff, ModifiedFile, Rename, RenameOptions, diff};
-pub use similarity::{jaro, jaro_winkler, path_rename_similarity};
+pub use similarity::{basename_rename_gate, jaro, jaro_winkler, path_rename_similarity};
 
 /// Name of this crate, used in provenance records.
 pub const CRATE_NAME: &str = "azusa-diff";

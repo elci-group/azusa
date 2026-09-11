@@ -6,8 +6,6 @@
 //! version always produce identical reports (L0–L2 in this milestone;
 //! structural layers arrive with phase 2).
 
-use std::collections::BTreeMap;
-
 use azusa_diff::FilesetDiff;
 use azusa_model::{
     AnalysisMode, DRIFT_REPORT_SCHEMA_VERSION, DriftDirection, DriftObservation, DriftReport,
@@ -23,14 +21,22 @@ const MAX_EVIDENCE_PATHS: usize = 8;
 
 /// An observation under construction (ids assigned deterministically after
 /// sorting).
-struct Draft {
-    category: Layer,
-    severity: Severity,
-    confidence: f32,
-    title: String,
-    detail: String,
-    side: Side,
-    evidence: Vec<Evidence>,
+#[derive(Clone)]
+pub(crate) struct Draft {
+    /// Layer / category of the observation.
+    pub(crate) category: Layer,
+    /// Severity of the observation.
+    pub(crate) severity: Severity,
+    /// Confidence in the observation, 0.0–1.0.
+    pub(crate) confidence: f32,
+    /// Short title.
+    pub(crate) title: String,
+    /// Longer explanation of what was observed.
+    pub(crate) detail: String,
+    /// Which side the observation belongs to.
+    pub(crate) side: Side,
+    /// Concrete evidence backing the observation.
+    pub(crate) evidence: Vec<Evidence>,
 }
 
 /// Compare two states into a full drift report.
@@ -125,6 +131,18 @@ pub fn compare(
     // L2 filesystem: additions, deletions, modifications, renames.
     push_filesystem_observations(a_name, b_name, diff, &mut drafts);
 
+    // L3–L5 structural layers over enriched facets.
+    let structure_outcome = crate::structural::compare_structure(a_name, a, b_name, b);
+    let dependency_outcome = crate::structural::compare_dependencies(a_name, a, b_name, b);
+    let configuration_outcome = crate::structural::compare_configuration(a, b);
+    let outcomes = vec![
+        (Layer::Structure, structure_outcome),
+        (Layer::Dependency, dependency_outcome),
+        (Layer::Configuration, configuration_outcome),
+    ];
+    drafts.extend(crate::structural::structural_drafts(&outcomes));
+    let structural = crate::structural::structural_scores(&outcomes);
+
     // Carry resolver notes (e.g. upstream fallback) as evidence.
     for note in notes {
         drafts.push(Draft {
@@ -138,9 +156,6 @@ pub fn compare(
         });
     }
 
-    // Structural layers (L3–L9) are filled by phase-2+ enrichment; layers
-    // with no analysis are excluded from scoring rather than counted as 0.
-    let structural: BTreeMap<Layer, f32> = BTreeMap::new();
     let effective_ancestry = effective_ancestry_for_scoring(a, b);
     let score: DriftScore = drift_score(&effective_ancestry, diff, &structural, &config.drift);
 
@@ -188,6 +203,7 @@ pub fn compare(
         summary,
         observations,
         intent: None,
+        clusters: azusa_diff::cluster(diff),
         recommendations,
         provenance: azusa_model::Provenance {
             tool_version: azusa_model::TOOL_VERSION.to_owned(),
@@ -677,6 +693,7 @@ mod tests {
     use super::*;
     use crate::resolve::StateResolver;
     use azusa_git::testutil::FixtureRepo;
+    use azusa_model::ClusterKind;
 
     fn report_for(fixture_root: &std::path::Path, a: &str, b: &str) -> DriftReport {
         let resolver = StateResolver::new(fixture_root);
@@ -800,6 +817,139 @@ mod tests {
         let first_json = serde_json::to_string(&first).unwrap();
         let second_json = serde_json::to_string(&second).unwrap();
         assert_eq!(first_json, second_json);
+    }
+
+    fn workspace_files() -> Vec<(&'static str, &'static str)> {
+        vec![
+            ("Cargo.toml", "[workspace]\nmembers = [\"crates/app\"]\n"),
+            (
+                "Cargo.lock",
+                "[[package]]\nname = \"app\"\nversion = \"0.1.0\"\n\n[[package]]\nname = \"serde\"\nversion = \"1.0.100\"\n",
+            ),
+            (
+                "crates/app/Cargo.toml",
+                "[package]\nname = \"app\"\nversion = \"0.1.0\"\n\n[dependencies]\nserde = \"1\"\n",
+            ),
+            ("crates/app/src/lib.rs", "pub fn app() {}\n"),
+        ]
+    }
+
+    #[test]
+    fn structural_module_drift_is_observed_and_scored() {
+        let fixture = FixtureRepo::with_remote();
+        for (path, text) in workspace_files() {
+            fixture.write(path, text);
+        }
+        fixture.commit_all("chore: workspace base");
+        fixture.sync_remote();
+        // Local adds a brand-new crate on top of the shared base.
+        fixture.write(
+            "crates/extra/Cargo.toml",
+            "[package]\nname = \"extra\"\nversion = \"0.1.0\"\n",
+        );
+        fixture.write("crates/extra/src/lib.rs", "pub fn extra() {}\n");
+        fixture.commit_all("feat: new crate");
+
+        let report = report_for(&fixture.path, "worktree", "upstream");
+        assert!(
+            report
+                .observations
+                .iter()
+                .any(|o| o.title.contains("1 module(s) present only in worktree")),
+            "observations: {:?}",
+            report
+                .observations
+                .iter()
+                .map(|o| &o.title)
+                .collect::<Vec<_>>()
+        );
+        assert!(report.score.layers.contains_key(&Layer::Structure));
+        assert!(report.score.layers[&Layer::Structure] > 0.0);
+        assert!(
+            report
+                .clusters
+                .iter()
+                .any(|c| c.label == "crates/extra" && c.kind == ClusterKind::Module)
+        );
+    }
+
+    #[test]
+    fn dependency_major_bump_is_high_severity() {
+        let fixture = FixtureRepo::with_remote();
+        for (path, text) in workspace_files() {
+            fixture.write(path, text);
+        }
+        fixture.commit_all("chore: workspace base");
+        fixture.sync_remote();
+
+        // Remote evolves: serde jumps a major version in manifest + lockfile.
+        fixture.advance_remote_files(
+            &[
+                (
+                    "Cargo.lock",
+                    "[[package]]\nname = \"app\"\nversion = \"0.1.0\"\n\n[[package]]\nname = \"serde\"\nversion = \"2.0.0\"\n",
+                ),
+                (
+                    "crates/app/Cargo.toml",
+                    "[package]\nname = \"app\"\nversion = \"0.1.0\"\n\n[dependencies]\nserde = \"2\"\n",
+                ),
+            ],
+            "chore(deps): serde 2",
+        );
+
+        let report = report_for(&fixture.path, "worktree", "upstream");
+        let bump_observation = report
+            .observations
+            .iter()
+            .find(|o| o.title.contains("dependency version(s) changed"))
+            .expect("dependency observation");
+        assert_eq!(bump_observation.severity, Severity::High);
+        assert!(
+            bump_observation
+                .evidence
+                .iter()
+                .flat_map(|e| &e.references)
+                .any(|r| r.contains("serde") && r.contains("major"))
+        );
+        assert!(report.score.layers.contains_key(&Layer::Dependency));
+    }
+
+    #[test]
+    fn configuration_changes_are_classified_by_kind() {
+        let fixture = FixtureRepo::with_remote();
+        fixture.write(".github/workflows/ci.yml", "on: [push]\njobs: {}\n");
+        fixture.commit_all("ci: initial workflow");
+        fixture.sync_remote();
+        fixture.advance_remote(
+            ".github/workflows/ci.yml",
+            "on: [push, pull_request]\n",
+            "ci: also on PRs",
+        );
+
+        let report = report_for(&fixture.path, "worktree", "upstream");
+        assert!(
+            report
+                .observations
+                .iter()
+                .any(|o| o.category == Layer::Configuration
+                    && o.title.contains("ci-workflow")
+                    && o.severity == Severity::Medium)
+        );
+        assert!(report.score.layers.contains_key(&Layer::Configuration));
+    }
+
+    #[test]
+    fn clean_workspace_reports_no_structural_drift() {
+        let fixture = FixtureRepo::with_remote();
+        for (path, text) in workspace_files() {
+            fixture.write(path, text);
+        }
+        fixture.commit_all("chore: workspace base");
+        fixture.sync_remote();
+        let report = report_for(&fixture.path, "worktree", "upstream");
+        assert_eq!(report.direction, DriftDirection::InSync);
+        assert!(!report.score.layers.contains_key(&Layer::Structure));
+        assert!(!report.score.layers.contains_key(&Layer::Dependency));
     }
 
     #[test]

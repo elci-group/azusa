@@ -115,6 +115,7 @@ dependencies = [
  "azusa-diff",
  "azusa-fs",
  "azusa-git",
+ "azusa-graph",
  "azusa-model",
  "serde",
  "serde_json",

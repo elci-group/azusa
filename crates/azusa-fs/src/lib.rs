@@ -94,6 +94,7 @@ impl FsProvider {
             self.cache.save(path).ok();
         }
         let filesystem = outcome.filesystem;
+        let captured_text = outcome.captured_text;
         let identity = StateIdentity {
             provider: ProviderKind::Filesystem,
             label: self.root.display().to_string(),
@@ -111,6 +112,7 @@ impl FsProvider {
             dependencies: DependencyState::default(),
             configuration: ConfigurationState::default(),
             behaviour: None,
+            captured_text,
         })
     }
 

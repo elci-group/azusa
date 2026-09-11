@@ -58,6 +58,23 @@ pub fn drift(specs: &[String], config: &AzusaConfig, opts: &OutputOpts) -> Resul
     Ok(output::exit_code(&report, &config.exit))
 }
 
+/// `azusa explain` — why does it matter? Full evidence, unclipped.
+pub fn explain(specs: &[String], config: &AzusaConfig, opts: &OutputOpts) -> Result<i32, RunError> {
+    let resolver = StateResolver::new(std::env::current_dir().unwrap_or_else(|_| ".".into()));
+    let report = build_report(&resolver, config, specs)?;
+    if !opts.quiet {
+        if opts.machine() {
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&report).unwrap_or_default()
+            );
+        } else {
+            println!("{}", output::report_to_human(&report));
+        }
+    }
+    Ok(output::exit_code(&report, &config.exit))
+}
+
 /// `azusa score` — the drift index only.
 pub fn score(specs: &[String], config: &AzusaConfig, opts: &OutputOpts) -> Result<i32, RunError> {
     let resolver = StateResolver::new(std::env::current_dir().unwrap_or_else(|_| ".".into()));

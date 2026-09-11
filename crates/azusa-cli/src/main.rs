@@ -53,6 +53,12 @@ enum Command {
         /// State selectors, as for `drift`.
         specs: Vec<String>,
     },
+
+    /// Why does it matter? Clusters + full evidence for every observation.
+    Explain {
+        /// State selectors, as for `drift`.
+        specs: Vec<String>,
+    },
 }
 
 /// Errors that map onto exit codes.
@@ -102,6 +108,7 @@ fn main() -> std::process::ExitCode {
         Command::Inspect { spec } => commands::inspect(spec.as_deref(), &cli.output),
         Command::Drift { specs } => commands::drift(&specs, &config, &cli.output),
         Command::Score { specs } => commands::score(&specs, &config, &cli.output),
+        Command::Explain { specs } => commands::explain(&specs, &config, &cli.output),
     };
 
     match code {

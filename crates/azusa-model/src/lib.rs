@@ -15,17 +15,17 @@ pub mod state;
 pub mod text;
 
 pub use drift::{
-    AnalysisMode, DRIFT_REPORT_SCHEMA_VERSION, DriftDirection, DriftObservation, DriftReport,
-    DriftRisk, DriftScore, DriftSummary, Evidence, EvidenceKind, IntentAssessment, IntentClass,
-    IntentSignal, Layer, Priority, Provenance, Recommendation, RepositoryInfo, RiskLevel, Severity,
-    Side, StateRef,
+    AnalysisMode, ChangeCluster, ClusterKind, DRIFT_REPORT_SCHEMA_VERSION, DriftDirection,
+    DriftObservation, DriftReport, DriftRisk, DriftScore, DriftSummary, Evidence, EvidenceKind,
+    IntentAssessment, IntentClass, IntentSignal, Layer, Priority, Provenance, Recommendation,
+    RepositoryInfo, RiskLevel, Severity, Side, StateRef,
 };
 pub use hash::{ContentHash, content_hash, content_hash_reader, fileset_digest};
 pub use state::{
-    Ancestry, BehaviourState, ConfigurationFile, ConfigurationKind, ConfigurationState,
-    DependencyEntry, DependencyKind, DependencyState, FileEntry, FileKind, FilesystemState,
-    LockfileInfo, ModuleInfo, ModuleKind, Relation, RepositoryState, StateIdentity, StructureState,
-    UncommittedSummary, VcsIdentity,
+    Ancestry, BehaviourState, CAPTURED_TEXT_MAX_BYTES, ConfigurationFile, ConfigurationKind,
+    ConfigurationState, DependencyEntry, DependencyKind, DependencyState, FileEntry, FileKind,
+    FilesystemState, LockfileInfo, ModuleInfo, ModuleKind, Relation, RepositoryState,
+    StateIdentity, StructureState, UncommittedSummary, VcsIdentity, is_analysis_file,
 };
 pub use text::{count_lines, looks_like_text};
 

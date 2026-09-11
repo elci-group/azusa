@@ -104,21 +104,29 @@ impl GitProvider {
     /// worktree-walk failures.
     pub fn snapshot(&mut self, selector: &GitSelector) -> Result<RepositoryState, GitError> {
         let vcs = self.vcs_identity();
-        let (filesystem, uncommitted) = match selector {
+        let (filesystem, captured_text, uncommitted) = match selector {
             GitSelector::Worktree => {
                 let outcome =
                     fs_snapshot(&self.root, &self.options, &mut self.cache).map_err(|e| {
                         GitError::Git(git2::Error::from_str(&format!("worktree walk failed: {e}")))
                     })?;
-                (outcome.filesystem, Some(self.uncommitted_summary()))
+                (
+                    outcome.filesystem,
+                    outcome.captured_text,
+                    Some(self.uncommitted_summary()),
+                )
             }
-            GitSelector::Index => (self.index_filesystem()?, None),
+            GitSelector::Index => {
+                let (filesystem, captured) = self.index_filesystem()?;
+                (filesystem, captured, None)
+            }
             GitSelector::Head
             | GitSelector::Upstream
             | GitSelector::RemoteDefault
             | GitSelector::Rev(_) => {
                 let commit = self.resolve_commit(selector)?;
-                (self.tree_filesystem(&commit.tree()?)?, None)
+                let (filesystem, captured) = self.tree_filesystem(&commit.tree()?)?;
+                (filesystem, captured, None)
             }
         };
 
@@ -140,6 +148,7 @@ impl GitProvider {
             dependencies: DependencyState::default(),
             configuration: ConfigurationState::default(),
             behaviour: None,
+            captured_text,
         })
     }
 
@@ -366,9 +375,13 @@ impl GitProvider {
         ancestry
     }
 
-    fn tree_filesystem(&self, tree: &Tree<'_>) -> Result<FilesystemState, GitError> {
+    fn tree_filesystem(
+        &self,
+        tree: &Tree<'_>,
+    ) -> Result<(FilesystemState, BTreeMap<String, String>), GitError> {
         let mut files: BTreeMap<String, FileEntry> = BTreeMap::new();
-        self.walk_tree(tree, "", &mut files)?;
+        let mut captured_text: BTreeMap<String, String> = BTreeMap::new();
+        self.walk_tree(tree, "", &mut files, &mut captured_text)?;
         let total_bytes = files.values().map(|e| e.size).sum();
         let digest = fileset_digest(files.iter().map(|(path, entry)| {
             (
@@ -377,11 +390,14 @@ impl GitProvider {
                 path.clone(),
             )
         }));
-        Ok(FilesystemState {
-            files,
-            total_bytes,
-            digest,
-        })
+        Ok((
+            FilesystemState {
+                files,
+                total_bytes,
+                digest,
+            },
+            captured_text,
+        ))
     }
 
     fn walk_tree(
@@ -389,6 +405,7 @@ impl GitProvider {
         tree: &Tree<'_>,
         prefix: &str,
         files: &mut BTreeMap<String, FileEntry>,
+        captured_text: &mut BTreeMap<String, String>,
     ) -> Result<(), GitError> {
         for entry in tree {
             let name = String::from_utf8_lossy(entry.name_bytes()).into_owned();
@@ -400,7 +417,7 @@ impl GitProvider {
             match entry.kind() {
                 Some(git2::ObjectType::Tree) => {
                     let subtree = entry.to_object(&self.repo)?.peel_to_tree()?;
-                    self.walk_tree(&subtree, &path, files)?;
+                    self.walk_tree(&subtree, &path, files, captured_text)?;
                 }
                 Some(git2::ObjectType::Blob) => {
                     let blob = entry.to_object(&self.repo)?.peel_to_blob()?;
@@ -412,6 +429,13 @@ impl GitProvider {
                         FileKind::File
                     };
                     let lines = looks_like_text(content).then(|| count_lines(content));
+                    if azusa_model::is_analysis_file(&path)
+                        && content.len() <= azusa_model::CAPTURED_TEXT_MAX_BYTES
+                    {
+                        if let Ok(text) = std::str::from_utf8(content) {
+                            captured_text.insert(path.clone(), text.to_owned());
+                        }
+                    }
                     files.insert(
                         path,
                         FileEntry {
@@ -442,9 +466,10 @@ impl GitProvider {
         Ok(())
     }
 
-    fn index_filesystem(&self) -> Result<FilesystemState, GitError> {
+    fn index_filesystem(&self) -> Result<(FilesystemState, BTreeMap<String, String>), GitError> {
         let index = self.repo.index()?;
         let mut files: BTreeMap<String, FileEntry> = BTreeMap::new();
+        let mut captured_text: BTreeMap<String, String> = BTreeMap::new();
         for entry in index.iter() {
             let path = String::from_utf8_lossy(&entry.path).into_owned();
             let kind = if entry.mode == 0o120_000 {
@@ -456,6 +481,13 @@ impl GitProvider {
                 Ok(blob) => {
                     let content = blob.content();
                     let lines = looks_like_text(content).then(|| count_lines(content));
+                    if azusa_model::is_analysis_file(&path)
+                        && content.len() <= azusa_model::CAPTURED_TEXT_MAX_BYTES
+                    {
+                        if let Ok(text) = std::str::from_utf8(content) {
+                            captured_text.insert(path.clone(), text.to_owned());
+                        }
+                    }
                     (content_hash(content), blob.size() as u64, lines)
                 }
                 Err(_) => (content_hash(entry.id.as_bytes()), 0, None),
@@ -479,11 +511,14 @@ impl GitProvider {
                 path.clone(),
             )
         }));
-        Ok(FilesystemState {
-            files,
-            total_bytes,
-            digest,
-        })
+        Ok((
+            FilesystemState {
+                files,
+                total_bytes,
+                digest,
+            },
+            captured_text,
+        ))
     }
 }
 

@@ -15,6 +15,7 @@ pub mod engine;
 pub mod error;
 pub mod resolve;
 pub mod scoring;
+pub mod structural;
 
 pub use config::{AzusaConfig, CONFIG_FILE_NAME, DriftWeights, ExitThresholds};
 pub use engine::compare;

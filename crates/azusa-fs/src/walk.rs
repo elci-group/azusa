@@ -150,11 +150,14 @@ fn relpath(path: &Path, root: &Path) -> String {
         .replace('\\', "/")
 }
 
-/// Result of a snapshot: the filesystem facet plus cache statistics.
-#[derive(Debug)]
+/// Result of a snapshot: the filesystem facet, retained analysis text and
+/// cache statistics.
+#[derive(Debug, Default)]
 pub struct SnapshotOutcome {
     /// The captured filesystem facet.
     pub filesystem: FilesystemState,
+    /// UTF-8 text of analysis-interest files (size-capped), keyed by path.
+    pub captured_text: std::collections::BTreeMap<String, String>,
     /// Hash-cache hits during this snapshot.
     pub cache_hits: u64,
     /// Hash-cache misses during this snapshot.
@@ -162,7 +165,11 @@ pub struct SnapshotOutcome {
 }
 
 /// Hash one walked file, streaming large files and skipping vanished ones.
-fn hash_walked(file: &WalkedFile) -> Option<(String, Option<u64>)> {
+/// When the file is of analysis interest and small, retain its UTF-8 text.
+fn hash_walked(
+    file: &WalkedFile,
+    captured_text: &std::sync::Mutex<std::collections::BTreeMap<String, String>>,
+) -> Option<(String, Option<u64>)> {
     if file.is_symlink {
         let target = std::fs::read_link(&file.abs).ok()?;
         let hash = content_hash(target.to_string_lossy().as_bytes());
@@ -175,6 +182,16 @@ fn hash_walked(file: &WalkedFile) -> Option<(String, Option<u64>)> {
         return Some((hash, None));
     }
     let bytes = std::fs::read(&file.abs).ok()?;
+    if azusa_model::is_analysis_file(&file.rel)
+        && bytes.len() <= azusa_model::CAPTURED_TEXT_MAX_BYTES
+    {
+        if let Ok(text) = std::str::from_utf8(&bytes) {
+            captured_text
+                .lock()
+                .expect("captured-text mutex")
+                .insert(file.rel.clone(), text.to_owned());
+        }
+    }
     let lines = looks_like_text(&bytes).then(|| count_lines(&bytes));
     Some((content_hash(&bytes), lines))
 }
@@ -236,8 +253,9 @@ pub fn snapshot(
     }
 
     let hashed: Mutex<Vec<(String, FileEntry, CachedStat)>> = Mutex::new(Vec::new());
+    let captured_text: Mutex<BTreeMap<String, String>> = Mutex::new(BTreeMap::new());
     pending.into_par_iter().for_each(|file| {
-        let Some((hash, lines)) = hash_walked(&file) else {
+        let Some((hash, lines)) = hash_walked(&file, &captured_text) else {
             return;
         };
         let entry = FileEntry {
@@ -269,6 +287,22 @@ pub fn snapshot(
         files.insert(rel, entry);
     }
 
+    let mut captured_text = captured_text.into_inner().expect("captured-text mutex");
+    // Cache-hit interest files were never re-read; capture their text with a
+    // cheap serial pass (few, small files by definition).
+    for path in files.keys() {
+        if !azusa_model::is_analysis_file(path) || captured_text.contains_key(path) {
+            continue;
+        }
+        let abs = root.join(path);
+        if let Ok(bytes) = std::fs::read(&abs) {
+            if bytes.len() <= azusa_model::CAPTURED_TEXT_MAX_BYTES {
+                if let Ok(text) = std::str::from_utf8(&bytes) {
+                    captured_text.insert(path.clone(), text.to_owned());
+                }
+            }
+        }
+    }
     let total_bytes = files.values().map(|e| e.size).sum();
     let digest = fileset_digest(files.iter().map(|(path, entry)| {
         (
@@ -285,6 +319,7 @@ pub fn snapshot(
             total_bytes,
             digest,
         },
+        captured_text,
         cache_hits: hits,
         cache_misses: misses,
     })

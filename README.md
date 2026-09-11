@@ -21,6 +21,7 @@ $ azusa                    # fast path: worktree vs upstream
 $ azusa drift origin/main  # worktree vs an explicit state
 $ azusa drift head HEAD~3  # any two states
 $ azusa drift ./old-copy   # a filesystem path is a state too
+$ azusa explain            # why does it matter? clusters + full evidence
 $ azusa status             # identity + quick health
 $ azusa inspect --json     # full state dump (machine contract)
 $ azusa score              # the drift index only
@@ -69,14 +70,26 @@ the score never replaces the evidence that produced it:
 L0 Identity      same repository? fork? unrelated?        (content-overlap)
 L1 Ancestry      ahead/behind, committed vs uncommitted   (merge-base)
 L2 Filesystem    added / deleted / modified / renamed      (BLAKE3 hashes)
-L3 Structure     modules, crates, topology                (phase 2)
-L4 Dependencies  manifest + lockfile divergence           (phase 2)
-L5 Configuration project configuration files             (phase 2)
+L3 Structure     modules, crates, topology                (manifests + tree)
+L4 Dependencies  manifest + lockfile divergence           (semver-aware)
+L5 Configuration project configuration files             (kind-weighted)
 L6 Interfaces    public API surface                       (phase 4)
 L7 Behaviour     tests, build scripts, entry points       (phase 4)
 L8 Semantics     security-critical regions                (phase 4)
 L9 Operations    deployment and service configuration     (phase 5)
 ```
+
+**Change clustering**: every diff is grouped into logical clusters
+(`crates/azusa-core`, `tests`, `lockfiles`, `operations`, …) so
+reconciliation can be decomposed — `azusa explain` shows them, and they ride
+along in the JSON contract.
+
+**Structural enrichment**: while hashing, providers retain the text of
+analysis-interest files (manifests, lockfiles, toolchain/CI/deploy configs,
+size-capped). `azusa-graph` turns that into module topology, dependency
+declarations with lockfile-resolved versions, and configuration
+classification — a pure function of the captured state, so enrichment never
+breaks determinism.
 
 Direction is first-class: `in-sync`, `a-to-b`, `b-to-a`, `bidirectional`,
 `unrelated`, `unknown` — with a confidence. Bidirectional drift always
@@ -128,7 +141,7 @@ min_overlap = 0.15
 | Phase | Scope | Status |
 | --- | --- | --- |
 | 1 | Foundation: providers, fileset comparison, ancestry, scoring, CLI, JSON | ✅ |
-| 2 | Structural intelligence: renames ✓, module topology, dependencies, config, clustering | ⬜ |
+| 2 | Structural intelligence: renames ✓, module topology, dependencies, config, clustering | ✅ |
 | 3 | ELCI intelligence: policy engine, intent detection, events, export, plans | ⬜ |
 | 4 | Behavioural drift: tests, build, interfaces | ⬜ |
 | 5 | Operational drift: deployment/service configuration | ⬜ |

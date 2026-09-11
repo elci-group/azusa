@@ -64,6 +64,7 @@ impl StateResolver {
             let state = provider
                 .snapshot()
                 .map_err(|e| CoreError::Provider(format!("fs provider: {e}")))?;
+            let state = azusa_graph::enrich(state);
             return Ok((state.clone(), state_ref(spec, &state)));
         }
 
@@ -72,16 +73,19 @@ impl StateResolver {
             let mut provider = GitProvider::discover(&self.root)
                 .map_err(|e| CoreError::Provider(format!("git provider: {e}")))?;
             let selector = GitSelector::parse(spec);
-            match provider.snapshot(&selector) {
-                Ok(state) => return Ok((state.clone(), state_ref(spec, &state))),
+            return match provider.snapshot(&selector) {
+                Ok(state) => {
+                    let state = azusa_graph::enrich(state);
+                    Ok((state.clone(), state_ref(spec, &state)))
+                }
                 Err(GitError::UnresolvedSelector { selector, reason }) => {
-                    return Err(CoreError::UnresolvedState {
+                    Err(CoreError::UnresolvedState {
                         spec: selector,
                         reason,
-                    });
+                    })
                 }
-                Err(e) => return Err(CoreError::Provider(format!("git provider: {e}"))),
-            }
+                Err(e) => Err(CoreError::Provider(format!("git provider: {e}"))),
+            };
         }
 
         Err(CoreError::NoProvider(self.root.clone()))
