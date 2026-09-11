@@ -30,6 +30,12 @@ mode = "actuate"
 enabled = true
 branch = "main"
 
+[safety]
+# Milestone workflow: main receives only kaptaind-made commits that passed
+# the test hook, pushed immediately after. Clear the default protected list
+# so those pushes are authorised; force remains disabled.
+protect_branches = []
+
 [capabilities]
 network_push = true
 
