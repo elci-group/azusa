@@ -3,13 +3,114 @@
 //! Measures, classifies, explains and plans reconciliation of drift between
 //! repository states. The bare `azusa` invocation is the fast path and is
 //! equivalent to `azusa drift`.
+//!
+//! Exit codes: 0 no significant drift · 1 medium · 2 high/critical ·
+//! 3 policy violation · 4 analysis failure · 5 invalid invocation.
 
-fn main() {
-    let args: Vec<String> = std::env::args().collect();
-    if args.iter().any(|a| a == "--version" || a == "-V") {
-        println!("azusa {}", env!("CARGO_PKG_VERSION"));
-        return;
+mod commands;
+mod output;
+
+use clap::Parser;
+use clap::Subcommand;
+
+use azusa_core::AzusaConfig;
+
+/// Repository drift intelligence: measure, explain and classify how two
+/// repository states have diverged.
+#[derive(Debug, Parser)]
+#[command(name = "azusa", version, about, arg_required_else_help = false)]
+struct Cli {
+    #[command(flatten)]
+    output: output::OutputOpts,
+
+    #[command(subcommand)]
+    command: Option<Command>,
+}
+
+#[derive(Debug, Subcommand)]
+enum Command {
+    /// Identity and quick health of a state (default: the worktree).
+    Status {
+        /// State selector (worktree, head, upstream, a revision, or a path).
+        spec: Option<String>,
+    },
+
+    /// Dump a full repository state (all facets).
+    Inspect {
+        /// State selector (default: worktree).
+        spec: Option<String>,
+    },
+
+    /// Compare two states: what is different? (default command)
+    Drift {
+        /// State selectors: none = worktree vs upstream; one = worktree vs
+        /// spec; two = spec vs spec.
+        specs: Vec<String>,
+    },
+
+    /// The drift index only.
+    Score {
+        /// State selectors, as for `drift`.
+        specs: Vec<String>,
+    },
+}
+
+/// Errors that map onto exit codes.
+#[derive(Debug)]
+enum RunError {
+    /// Analysis failure (exit 4).
+    Analysis(azusa_core::CoreError),
+}
+
+impl std::fmt::Display for RunError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Analysis(e) => write!(f, "{e}"),
+        }
     }
-    eprintln!("azusa: CLI lands with milestone 1 (phase 1 foundation)");
-    std::process::exit(5);
+}
+
+impl From<azusa_core::CoreError> for RunError {
+    fn from(value: azusa_core::CoreError) -> Self {
+        Self::Analysis(value)
+    }
+}
+
+fn main() -> std::process::ExitCode {
+    let cli = match Cli::try_parse() {
+        Ok(cli) => cli,
+        Err(error) => {
+            // Distinguish usage errors (5) from --help/----version (0),
+            // which clap signals through exit code 0.
+            let code = if error.use_stderr() { 5 } else { 0 };
+            print!("{error}");
+            return std::process::ExitCode::from(code.clamp(0, 5) as u8);
+        }
+    };
+
+    let root = std::env::current_dir().unwrap_or_else(|_| ".".into());
+    let config = match AzusaConfig::load(&root) {
+        Ok(config) => config,
+        Err(error) => {
+            eprintln!("azusa: {error}");
+            return std::process::ExitCode::from(4);
+        }
+    };
+
+    let code = match cli.command.unwrap_or(Command::Drift { specs: Vec::new() }) {
+        Command::Status { spec } => commands::status(spec.as_deref(), &config, &cli.output),
+        Command::Inspect { spec } => commands::inspect(spec.as_deref(), &cli.output),
+        Command::Drift { specs } => commands::drift(&specs, &config, &cli.output),
+        Command::Score { specs } => commands::score(&specs, &config, &cli.output),
+    };
+
+    match code {
+        Ok(code) => std::process::ExitCode::from(code.clamp(0, 5) as u8),
+        Err(error) => {
+            if !cli.output.quiet {
+                eprintln!("azusa: {error}");
+            }
+            std::process::ExitCode::from(4)
+        }
+    }
 }

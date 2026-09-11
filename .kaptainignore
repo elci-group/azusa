@@ -1,3 +1,5 @@
 target/
 .azusa/
 .kaptaind/
+git.uni/
+.git/

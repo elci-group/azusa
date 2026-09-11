@@ -41,8 +41,32 @@ index is always accompanied by the observations that produced it.
 
 Given the same states, configuration and tool version, azusa produces the
 same structural result. Scoring uses fixed saturating formulas over
-observation counts (documented per layer in `azusa-core`). Timestamps appear
-only in provenance, never inside the deterministic analysis path.
+observation counts (`10·c/(c+k)` per layer, constants in `azusa-core`'s
+scoring module, each documented and unit-tested):
+
+- **ancestry** — `c = commits_ahead + commits_behind + 0.5·uncommitted`, k=12
+- **filesystem** — `c = added + modified + 2·deleted + 0.5·renamed`, k=40
+- composite — weighted mean over **analyzed** layers only (empty facets are
+  excluded, never silently zero)
+
+Timestamps appear only in provenance, never inside the deterministic
+analysis path.
+
+## State resolution
+
+`worktree` · `index` · `head` · `upstream` · `remote` (origin/HEAD →
+origin/main → origin/master) · any libgit2 revision · any directory path.
+The default pair is `worktree` vs `upstream` with documented fallbacks,
+each carried into the report as an observation.
+
+## Hashing and incrementality
+
+File content is hashed with BLAKE3 (`azusa-model::hash`). Fileset digests
+hash a canonical `<mode> <hash> <path>` listing, so two states are identical
+iff their digests match. A stat-keyed cache (`(path, size, mtime) → hash`,
+persisted at `.azusa/cache/fs-hashes.json`) makes repeat scans incremental;
+mtime never enters the state itself. Worktree snapshots share one walker
+(`azusa-fs`) across providers so ignore rules behave identically.
 
 ## Safety
 

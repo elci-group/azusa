@@ -115,9 +115,10 @@ dependencies = [
  "azusa-diff",
  "azusa-fs",
  "azusa-git",
- "azusa-graph",
  "azusa-model",
  "serde",
+ "serde_json",
+ "tempfile",
  "thiserror",
  "toml",
 ]
@@ -144,10 +145,12 @@ name = "azusa-fs"
 version = "0.1.0"
 dependencies = [
  "azusa-model",
+ "blake3",
  "ignore",
  "rayon",
  "serde",
  "serde_json",
+ "tempfile",
  "thiserror",
 ]
 
@@ -155,8 +158,11 @@ dependencies = [
 name = "azusa-git"
 version = "0.1.0"
 dependencies = [
+ "azusa-fs",
  "azusa-model",
  "git2",
+ "serde",
+ "tempfile",
  "thiserror",
 ]
 

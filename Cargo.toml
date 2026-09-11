@@ -29,6 +29,22 @@ missing_docs = "warn"
 [workspace.lints.clippy]
 all = { level = "warn", priority = -1 }
 pedantic = { level = "warn", priority = -1 }
+# Numeric domain code: scores are saturating formulas over counts and sizes;
+# the possible-truncation/precision lints fight the domain without adding
+# safety here (no unsafe, no financial math).
+cast_possible_truncation = "allow"
+cast_precision_loss = "allow"
+cast_sign_loss = "allow"
+cast_possible_wrap = "allow"
+# Rendering builds strings from many small formatted pieces.
+format_push_string = "allow"
+# Tests and scoring compare floats for exact equality by design (determinism
+# contract); scores are rounded before comparison.
+float_cmp = "allow"
+# Small Copy enums read fine by reference in match arms.
+trivially_copy_pass_by_ref = "allow"
+items_after_statements = "allow"
+naive_bytecount = "allow"
 
 [profile.release]
 lto = "thin"
