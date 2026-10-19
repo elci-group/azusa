@@ -328,9 +328,9 @@ mod tests {
 
     #[test]
     fn mode_only_change_is_flagged() {
-        let mut e1 = entry("#!/bin/sh\n");
+        let mut e1 = entry("echo one\n");
         e1.executable = false;
-        let mut e2 = entry("#!/bin/sh\n");
+        let mut e2 = entry("echo one\n");
         e2.executable = true;
         let a = state(&[("run.sh", e1)]);
         let b = state(&[("run.sh", e2)]);
