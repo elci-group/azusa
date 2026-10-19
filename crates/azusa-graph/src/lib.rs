@@ -29,6 +29,19 @@ use crate::manifest::{lockfile_versions, modules_of, resolve_dependencies};
 /// Name of this crate, used in provenance records.
 pub const CRATE_NAME: &str = "azusa-graph";
 
+/// Join path segments into a canonical repo-relative path: forward-slash
+/// separated with no leading separator, on every host OS. Filesystem-state
+/// keys use this canonical form, so lookups must build paths the same way.
+#[must_use]
+fn canonical_repo_path(segments: &[&str]) -> String {
+    segments
+        .iter()
+        .filter(|segment| !(*segment).is_empty())
+        .copied()
+        .collect::<Vec<&str>>()
+        .join("/")
+}
+
 /// Fill the structure, dependency and configuration facets of a captured
 /// state from its filesystem listing and retained analysis text.
 #[must_use]
@@ -52,12 +65,11 @@ pub fn enrich(mut state: RepositoryState) -> RepositoryState {
     let mut modules = modules_of(&manifests);
     for module in &mut modules {
         if module.kind == azusa_model::ModuleKind::Other {
-            let lib = format!("{}/src/lib.rs", module.path)
-                .trim_start_matches('/')
-                .to_owned();
-            let bin = format!("{}/src/main.rs", module.path)
-                .trim_start_matches('/')
-                .to_owned();
+            // Filesystem keys are canonical repo-relative paths: always
+            // forward-slash, on every host OS. Joining with the host
+            // separator (Path::join) would break lookups on Windows.
+            let lib = canonical_repo_path(&[&module.path, "src", "lib.rs"]);
+            let bin = canonical_repo_path(&[&module.path, "src", "main.rs"]);
             if state.filesystem.files.contains_key(&lib) {
                 module.kind = azusa_model::ModuleKind::RustLibrary;
             } else if state.filesystem.files.contains_key(&bin) {

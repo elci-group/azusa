@@ -4,3 +4,6 @@
 *.swp
 .env
 .uni
+
+# edwardian machine artefacts (self-scan feedback)
+edwardian/
