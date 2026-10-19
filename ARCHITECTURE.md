@@ -221,6 +221,30 @@ persisted at `.azusa/cache/fs-hashes.json`) makes repeat scans incremental;
 mtime never enters the state itself. Worktree snapshots share one walker
 (`azusa-fs`) across providers so ignore rules behave identically.
 
+## Platform readiness
+
+Azusa is Linux-first but Windows-portable at the source level:
+
+- Every unix-only API is `#[cfg(unix)]`-gated with a `#[cfg(not(unix))]`
+  fallback (executable-bit detection in `azusa-fs` degrades to `false` on
+  Windows); symlink handling uses cross-platform std APIs.
+- Filesystem-state keys are canonical repo-relative forward-slash paths on
+  every host OS; lookups must be built through the same canonical join —
+  never the host separator.
+- Git mode strings (`100644`, `100755`, `120000`) are git's convention,
+  emitted as a string contract — they describe analyzed content, not the
+  host filesystem.
+- `ConfigurationKind::SystemdUnit` (`systemd-unit`), `CiWorkflow`, and
+  friends are content-classification vocabulary: they name file kinds
+  found in *analyzed repositories*, not runtime services of the host.
+  A Windows host classifying a Linux repository's systemd units is a
+  supported, tested path.
+
+Platform-portability scans (edwardian) flag the classifier vocabulary and
+cfg-gated unix test code as blockers; those are scanner artifacts, not
+runtime dependencies. A standalone Windows fork can be produced with
+`edwardian release` when a Windows target is actually needed.
+
 ## Safety
 
 Azusa observes, analyses and directs. It does not execute repository
