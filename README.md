@@ -181,7 +181,9 @@ continuously, escalating attention in stages:
 State persists under `.azusa/watch.json`, so a restarted watcher resumes
 where it left off; idle cycles de-escalate back to stage 0. Each cycle's
 analysis stays deterministic — only the loop itself is temporal, and
-mtimes feed the change detector, never the analysis path.
+mtimes feed the change detector, never the analysis path. With
+`--max-cycles`, watch exits with the drift mapping of its last analysis
+cycle, so a bounded watch is CI-usable like `azusa drift`.
 
 ## Reconciliation planning
 
@@ -212,7 +214,10 @@ duplicating report content):
 ```text
 .azusa/history.jsonl   one JSONL record per analysis run
 .azusa/events.jsonl    ELCI event log (NDJSON, schema_version 1)
-.azusa/exports/        canonical drift-report artefacts (`azusa export`)
+.azusa/exports/        canonical artefacts: drift reports (`azusa export`)
+                       and reconciliation plans (`azusa plan`, watch stage 2)
+.azusa/watch.json      watch-mode escalation state
+.azusa/cache/          stat-keyed hash cache (incremental scans)
 ```
 
 Events follow the ELCI universal event contract (`azusa.drift.detected`,

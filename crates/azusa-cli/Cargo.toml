@@ -1,6 +1,6 @@
 [package]
 name = "azusa-cli"
-description = "Azusa CLI — repository drift intelligence: azusa drift | inspect | explain | score | plan | policy | watch | export | matrix"
+description = "Azusa CLI — repository drift intelligence: azusa drift | inspect | explain | score | plan | policy | watch | export"
 version.workspace = true
 edition.workspace = true
 license.workspace = true

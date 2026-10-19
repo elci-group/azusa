@@ -11,11 +11,11 @@ Azusa models repositories as **states**, not Git trees, and comparison as a
 | `azusa-git` | Git state provider (worktree / index / HEAD / upstream / remote refs) via libgit2. |
 | `azusa-fs` | Filesystem state provider: ignore-aware walk, content hashing, incremental cache. |
 | `azusa-diff` | Fileset diff, rename detection, line deltas, change clustering. |
-| `azusa-graph` | Structural analysis: module topology, dependency graphs, config/behaviour inventory. |
+| `azusa-graph` | Structural analysis: module topology, dependency graphs, config/behaviour/operations inventory. |
 | `azusa-core` | Comparison engine: layers L0–L9, scoring, direction, intent, risk, plans, config. |
 | `azusa-policy` | Policy engine: drift limits checked by `azusa policy check` (CI gate). |
 | `azusa-elci` | ELCI universal event contract, observation schema, export artefacts. |
-| `azusa-store` | Local append-only evidence store (`.azusa/`): report history, state digests. |
+| `azusa-store` | Local append-only evidence store (`.azusa/`): report history, events, watch state. |
 | `azusa-cli` | The `azusa` binary. |
 
 ## Comparison layers
