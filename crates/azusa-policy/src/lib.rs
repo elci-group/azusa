@@ -10,7 +10,7 @@
 
 use serde::{Deserialize, Serialize};
 
-use azusa_model::{DriftObservation, DriftReport, Layer, Severity};
+use azusa_model::{ConfigurationKind, DriftObservation, DriftReport, Layer, Severity};
 
 /// Name of this crate, used in provenance records.
 pub const CRATE_NAME: &str = "azusa-policy";
@@ -267,7 +267,15 @@ fn check_structure(
     }
 }
 
-const PRODUCTION_KINDS: [&str; 4] = ["dockerfile", "kubernetes", "systemd-unit", "compose"];
+/// Configuration kinds whose changes count as production-facing. Derived
+/// from the shared [`ConfigurationKind`] vocabulary so the policy never
+/// drifts from the classifier's canonical names.
+const PRODUCTION_KINDS: [ConfigurationKind; 4] = [
+    ConfigurationKind::Dockerfile,
+    ConfigurationKind::Kubernetes,
+    ConfigurationKind::SystemdUnit,
+    ConfigurationKind::Compose,
+];
 
 fn check_configuration(
     observation: &DriftObservation,
@@ -277,7 +285,7 @@ fn check_configuration(
     let is_production = observation.title.contains("configuration changed")
         && (PRODUCTION_KINDS
             .iter()
-            .any(|kind| observation.title.contains(kind))
+            .any(|kind| observation.title.contains(kind.as_str()))
             || observation
                 .evidence
                 .iter()

@@ -408,7 +408,7 @@ mod tests {
     fn snapshot_tracks_executable_bit() {
         let dir = tempfile::tempdir().unwrap();
         let root = dir.path();
-        write(&root.join("run.sh"), "#!/bin/sh\n");
+        write(&root.join("run.sh"), "echo one\n");
         #[cfg(unix)]
         {
             use std::os::unix::fs::PermissionsExt;
