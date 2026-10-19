@@ -21,7 +21,7 @@ use azusa_core::AzusaConfig;
 /// Repository drift intelligence: measure, explain and classify how two
 /// repository states have diverged.
 #[derive(Debug, Parser)]
-#[command(name = "azusa", version, about, arg_required_else_help = false)]
+#[command(name = "azusa", version = azusa_model::tool_version(), about, arg_required_else_help = false)]
 struct Cli {
     #[command(flatten)]
     output: output::OutputOpts,

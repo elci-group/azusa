@@ -7,3 +7,6 @@
 
 # edwardian machine artefacts (self-scan feedback)
 edwardian/
+
+# theosis update transactions (remote working clones)
+.theosis/

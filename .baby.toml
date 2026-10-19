@@ -1,0 +1,13 @@
+# baby installation recipe — azusa
+#
+# Baby builds the release binary and installs it (baby --user → ~/.local/bin).
+# Theosis delegates to this recipe when reconciling an installed azusa with
+# the remote VERSION (theosis check | update).
+
+schema = "baby.install/v1"
+build_system = "cargo"
+binary = "azusa"
+artifact = "target/release/azusa"
+commands = [
+  ["cargo", "build", "--release", "--bin", "azusa", "-p", "azusa-cli"],
+]

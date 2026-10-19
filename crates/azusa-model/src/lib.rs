@@ -61,12 +61,29 @@ impl ProviderKind {
 }
 
 /// Version of the azusa toolchain producing states and reports.
-pub const TOOL_VERSION: &str = env!("CARGO_PKG_VERSION");
+///
+/// Embedded from the kaptaind-managed root `VERSION` file — the single
+/// version authority. Theosis reconciles an installed azusa against the
+/// remote `VERSION` and verifies via the binary's self-reported version, so
+/// the binary must speak the same number kaptaind publishes.
+#[must_use]
+pub fn tool_version() -> &'static str {
+    include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../VERSION")).trim()
+}
 
 /// Smoke test: the crate builds and its types are nameable.
 #[test]
 fn model_smoke() {
     assert_eq!(ProviderKind::Git.as_str(), "git");
     assert_eq!(ProviderKind::Filesystem.as_str(), "fs");
-    assert_eq!(TOOL_VERSION, "0.1.0");
+    // The embedded version is the kaptaind VERSION: strict numeric A.B.C,
+    // no trailing whitespace.
+    let version = tool_version();
+    let mut parts = version.split('.');
+    assert_eq!(parts.clone().count(), 3, "version must be A.B.C");
+    assert!(
+        parts.all(|part| !part.is_empty() && part.bytes().all(|b| b.is_ascii_digit())),
+        "version must be numeric: {version}"
+    );
+    assert!(!version.ends_with('\n'));
 }

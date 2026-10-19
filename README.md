@@ -37,6 +37,24 @@ any directory path. With no arguments, azusa compares `worktree` against
 `upstream`, falling back to the remote default branch, then `head` — every
 fallback is carried in the report as evidence.
 
+## Install & update
+
+Azusa ships as a single static binary. Two repo-native tools manage its
+lifecycle:
+
+```console
+$ baby --user             # build + install to ~/.local/bin (recipe: .baby.toml)
+$ theosis check           # compare the installed version with this remote
+$ theosis update          # reconcile: clone, build via baby, install, verify
+```
+
+Theosis clones this repository's default branch into a transaction
+directory, reads the kaptaind-managed root `VERSION` (the same number the
+binary self-reports — `azusa --version`), delegates the build to
+`.baby.toml`, installs, and verifies before declaring success. It never
+downgrades automatically (exit 10 when the installed version is newer).
+Update state lives under `.theosis/` and is never committed.
+
 ## Exit codes
 
 | Code | Meaning |

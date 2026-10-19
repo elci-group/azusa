@@ -218,7 +218,7 @@ pub fn compare(
         clusters,
         recommendations,
         provenance: azusa_model::Provenance {
-            tool_version: azusa_model::TOOL_VERSION.to_owned(),
+            tool_version: azusa_model::tool_version().to_owned(),
             analysis_mode: AnalysisMode::Deterministic,
             captured_at: None,
             config_digest: Some(config.digest()),
