@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The azusa Authors
+// SPDX-License-Identifier: MIT
+
 //! Azusa comparison engine.
 //!
 //! Compares two [`azusa_model::RepositoryState`]s layer by layer
@@ -10,9 +13,12 @@
 //! tool version, the structural result never varies. Probabilistic
 //! interpretation is never mixed into deterministic scoring silently.
 
+pub mod behaviour;
 pub mod config;
 pub mod engine;
 pub mod error;
+pub mod intent;
+pub mod plan;
 pub mod resolve;
 pub mod scoring;
 pub mod structural;

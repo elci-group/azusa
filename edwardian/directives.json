@@ -1,0 +1,4696 @@
+{
+  "directives": [
+    {
+      "affected_components": [
+        ".uni"
+      ],
+      "current_state": "requires-implementation",
+      "dependencies": [],
+      "evidence_ids": [
+        "EWD-01411",
+        "EWD-01412"
+      ],
+      "id": "EWD-D001",
+      "objective": "Remove invocation of an absolute unix shell path (blocker readiness impact)",
+      "priority": "P0",
+      "remediation": "spawn a native Windows process instead, or gate behind #[cfg(unix)] with a Windows branch Recommended path (existing-portable): direct API / crate call — most shell-outs wrap functionality available as a portable library call.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".uni"
+      ],
+      "current_state": "requires-implementation",
+      "dependencies": [
+        "EWD-D001"
+      ],
+      "evidence_ids": [
+        "EWD-01437",
+        "EWD-01439",
+        "EWD-01440"
+      ],
+      "id": "EWD-D002",
+      "objective": "Remove systemd service integration (blocker readiness impact)",
+      "priority": "P0",
+      "remediation": "register as a Windows Service (service-manager crate) or use the Task Scheduler Recommended path (foss-substitution): service-manager crate (Windows SCM) — mature FOSS crate wrapping the Service Control Manager; maps 1:1 to systemd unit semantics.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        "."
+      ],
+      "current_state": "requires-implementation",
+      "dependencies": [],
+      "evidence_ids": [
+        "EWD-01444",
+        "EWD-01445"
+      ],
+      "id": "EWD-D003",
+      "objective": "Remove systemd service integration (blocker readiness impact)",
+      "priority": "P0",
+      "remediation": "register as a Windows Service (service-manager crate) or use the Task Scheduler Recommended path (foss-substitution): service-manager crate (Windows SCM) — mature FOSS crate wrapping the Service Control Manager; maps 1:1 to systemd unit semantics.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        "crates/azusa-diff/src"
+      ],
+      "current_state": "requires-implementation",
+      "dependencies": [],
+      "evidence_ids": [
+        "EWD-01489",
+        "EWD-01490"
+      ],
+      "id": "EWD-D004",
+      "objective": "Remove invocation of an absolute unix shell path (blocker readiness impact)",
+      "priority": "P0",
+      "remediation": "spawn a native Windows process instead, or gate behind #[cfg(unix)] with a Windows branch Recommended path (existing-portable): direct API / crate call — most shell-outs wrap functionality available as a portable library call.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        "crates/azusa-fs/src"
+      ],
+      "current_state": "requires-implementation",
+      "dependencies": [],
+      "evidence_ids": [
+        "EWD-01497"
+      ],
+      "id": "EWD-D005",
+      "objective": "Remove invocation of an absolute unix shell path (blocker readiness impact)",
+      "priority": "P0",
+      "remediation": "spawn a native Windows process instead, or gate behind #[cfg(unix)] with a Windows branch Recommended path (existing-portable): direct API / crate call — most shell-outs wrap functionality available as a portable library call.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        "crates/azusa-model/src"
+      ],
+      "current_state": "requires-implementation",
+      "dependencies": [],
+      "evidence_ids": [
+        "EWD-01512"
+      ],
+      "id": "EWD-D006",
+      "objective": "Remove systemd service integration (blocker readiness impact)",
+      "priority": "P0",
+      "remediation": "register as a Windows Service (service-manager crate) or use the Task Scheduler Recommended path (foss-substitution): service-manager crate (Windows SCM) — mature FOSS crate wrapping the Service Control Manager; maps 1:1 to systemd unit semantics.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        "crates/azusa-policy/src"
+      ],
+      "current_state": "requires-implementation",
+      "dependencies": [],
+      "evidence_ids": [
+        "EWD-01513"
+      ],
+      "id": "EWD-D007",
+      "objective": "Remove systemd service integration (blocker readiness impact)",
+      "priority": "P0",
+      "remediation": "register as a Windows Service (service-manager crate) or use the Task Scheduler Recommended path (foss-substitution): service-manager crate (Windows SCM) — mature FOSS crate wrapping the Service Control Manager; maps 1:1 to systemd unit semantics.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".azusa/exports"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [],
+      "evidence_ids": [
+        "EWD-00001"
+      ],
+      "id": "EWD-D008",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".azusa/exports"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D008"
+      ],
+      "evidence_ids": [
+        "EWD-00002"
+      ],
+      "id": "EWD-D009",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [],
+      "evidence_ids": [
+        "EWD-00042",
+        "EWD-00043",
+        "EWD-00044",
+        "EWD-00045",
+        "EWD-00046",
+        "EWD-00047",
+        "EWD-00048",
+        "EWD-00049"
+      ],
+      "id": "EWD-D010",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind"
+      ],
+      "current_state": "requires-implementation",
+      "dependencies": [
+        "EWD-D010"
+      ],
+      "evidence_ids": [
+        "EWD-00112"
+      ],
+      "id": "EWD-D011",
+      "objective": "Remove POSIX signal handling (SIGTERM) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "handle CTRL_CLOSE_EVENT/CTRL_C_EVENT console control handlers on Windows Recommended path (existing-portable): graceful-shutdown channel (in-process) — a shutdown broadcast channel removes the OS signal dependency where signalling is internal.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [],
+      "evidence_ids": [
+        "EWD-00113",
+        "EWD-00114",
+        "EWD-00115"
+      ],
+      "id": "EWD-D012",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012"
+      ],
+      "evidence_ids": [
+        "EWD-00117",
+        "EWD-00118",
+        "EWD-00119"
+      ],
+      "id": "EWD-D013",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013"
+      ],
+      "evidence_ids": [
+        "EWD-00121",
+        "EWD-00122",
+        "EWD-00123"
+      ],
+      "id": "EWD-D014",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014"
+      ],
+      "evidence_ids": [
+        "EWD-00125",
+        "EWD-00126",
+        "EWD-00127"
+      ],
+      "id": "EWD-D015",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015"
+      ],
+      "evidence_ids": [
+        "EWD-00129",
+        "EWD-00130",
+        "EWD-00131"
+      ],
+      "id": "EWD-D016",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016"
+      ],
+      "evidence_ids": [
+        "EWD-00133",
+        "EWD-00134",
+        "EWD-00135"
+      ],
+      "id": "EWD-D017",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017"
+      ],
+      "evidence_ids": [
+        "EWD-00137",
+        "EWD-00138",
+        "EWD-00139"
+      ],
+      "id": "EWD-D018",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018"
+      ],
+      "evidence_ids": [
+        "EWD-00141",
+        "EWD-00142",
+        "EWD-00143"
+      ],
+      "id": "EWD-D019",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019"
+      ],
+      "evidence_ids": [
+        "EWD-00145",
+        "EWD-00146",
+        "EWD-00147"
+      ],
+      "id": "EWD-D020",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020"
+      ],
+      "evidence_ids": [
+        "EWD-00149",
+        "EWD-00150",
+        "EWD-00151"
+      ],
+      "id": "EWD-D021",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021"
+      ],
+      "evidence_ids": [
+        "EWD-00153",
+        "EWD-00154",
+        "EWD-00155"
+      ],
+      "id": "EWD-D022",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022"
+      ],
+      "evidence_ids": [
+        "EWD-00157",
+        "EWD-00158",
+        "EWD-00159"
+      ],
+      "id": "EWD-D023",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023"
+      ],
+      "evidence_ids": [
+        "EWD-00161",
+        "EWD-00162",
+        "EWD-00163"
+      ],
+      "id": "EWD-D024",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024"
+      ],
+      "evidence_ids": [
+        "EWD-00165",
+        "EWD-00166",
+        "EWD-00167"
+      ],
+      "id": "EWD-D025",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025"
+      ],
+      "evidence_ids": [
+        "EWD-00169",
+        "EWD-00170",
+        "EWD-00171"
+      ],
+      "id": "EWD-D026",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026"
+      ],
+      "evidence_ids": [
+        "EWD-00173",
+        "EWD-00174",
+        "EWD-00175"
+      ],
+      "id": "EWD-D027",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027"
+      ],
+      "evidence_ids": [
+        "EWD-00177",
+        "EWD-00178",
+        "EWD-00179"
+      ],
+      "id": "EWD-D028",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028"
+      ],
+      "evidence_ids": [
+        "EWD-00181",
+        "EWD-00182",
+        "EWD-00183"
+      ],
+      "id": "EWD-D029",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029"
+      ],
+      "evidence_ids": [
+        "EWD-00185",
+        "EWD-00186",
+        "EWD-00187"
+      ],
+      "id": "EWD-D030",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030"
+      ],
+      "evidence_ids": [
+        "EWD-00208",
+        "EWD-00209",
+        "EWD-00210"
+      ],
+      "id": "EWD-D031",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031"
+      ],
+      "evidence_ids": [
+        "EWD-00231",
+        "EWD-00232",
+        "EWD-00233"
+      ],
+      "id": "EWD-D032",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032"
+      ],
+      "evidence_ids": [
+        "EWD-00254",
+        "EWD-00255",
+        "EWD-00256"
+      ],
+      "id": "EWD-D033",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033"
+      ],
+      "evidence_ids": [
+        "EWD-00277",
+        "EWD-00278",
+        "EWD-00279"
+      ],
+      "id": "EWD-D034",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034"
+      ],
+      "evidence_ids": [
+        "EWD-00300",
+        "EWD-00301",
+        "EWD-00302"
+      ],
+      "id": "EWD-D035",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035"
+      ],
+      "evidence_ids": [
+        "EWD-00323",
+        "EWD-00324",
+        "EWD-00325"
+      ],
+      "id": "EWD-D036",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036"
+      ],
+      "evidence_ids": [
+        "EWD-00346",
+        "EWD-00347",
+        "EWD-00348"
+      ],
+      "id": "EWD-D037",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037"
+      ],
+      "evidence_ids": [
+        "EWD-00369",
+        "EWD-00370",
+        "EWD-00371"
+      ],
+      "id": "EWD-D038",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038"
+      ],
+      "evidence_ids": [
+        "EWD-00392",
+        "EWD-00393",
+        "EWD-00394"
+      ],
+      "id": "EWD-D039",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039"
+      ],
+      "evidence_ids": [
+        "EWD-00415",
+        "EWD-00416",
+        "EWD-00417"
+      ],
+      "id": "EWD-D040",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040"
+      ],
+      "evidence_ids": [
+        "EWD-00438",
+        "EWD-00439",
+        "EWD-00440"
+      ],
+      "id": "EWD-D041",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041"
+      ],
+      "evidence_ids": [
+        "EWD-00461",
+        "EWD-00462",
+        "EWD-00463"
+      ],
+      "id": "EWD-D042",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042"
+      ],
+      "evidence_ids": [
+        "EWD-00484",
+        "EWD-00485",
+        "EWD-00486"
+      ],
+      "id": "EWD-D043",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043"
+      ],
+      "evidence_ids": [
+        "EWD-00507",
+        "EWD-00508",
+        "EWD-00509"
+      ],
+      "id": "EWD-D044",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044"
+      ],
+      "evidence_ids": [
+        "EWD-00530",
+        "EWD-00531",
+        "EWD-00532"
+      ],
+      "id": "EWD-D045",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045"
+      ],
+      "evidence_ids": [
+        "EWD-00553",
+        "EWD-00554",
+        "EWD-00555"
+      ],
+      "id": "EWD-D046",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046"
+      ],
+      "evidence_ids": [
+        "EWD-00576",
+        "EWD-00577",
+        "EWD-00578"
+      ],
+      "id": "EWD-D047",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047"
+      ],
+      "evidence_ids": [
+        "EWD-00599",
+        "EWD-00600",
+        "EWD-00601"
+      ],
+      "id": "EWD-D048",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048"
+      ],
+      "evidence_ids": [
+        "EWD-00622",
+        "EWD-00623",
+        "EWD-00624"
+      ],
+      "id": "EWD-D049",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048",
+        "EWD-D049"
+      ],
+      "evidence_ids": [
+        "EWD-00645",
+        "EWD-00646",
+        "EWD-00647"
+      ],
+      "id": "EWD-D050",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048",
+        "EWD-D049",
+        "EWD-D050"
+      ],
+      "evidence_ids": [
+        "EWD-00668",
+        "EWD-00669",
+        "EWD-00670"
+      ],
+      "id": "EWD-D051",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048",
+        "EWD-D049",
+        "EWD-D050",
+        "EWD-D051"
+      ],
+      "evidence_ids": [
+        "EWD-00691",
+        "EWD-00692",
+        "EWD-00693"
+      ],
+      "id": "EWD-D052",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048",
+        "EWD-D049",
+        "EWD-D050",
+        "EWD-D051",
+        "EWD-D052"
+      ],
+      "evidence_ids": [
+        "EWD-00714",
+        "EWD-00715",
+        "EWD-00716"
+      ],
+      "id": "EWD-D053",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048",
+        "EWD-D049",
+        "EWD-D050",
+        "EWD-D051",
+        "EWD-D052",
+        "EWD-D053"
+      ],
+      "evidence_ids": [
+        "EWD-00737",
+        "EWD-00738",
+        "EWD-00739"
+      ],
+      "id": "EWD-D054",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048",
+        "EWD-D049",
+        "EWD-D050",
+        "EWD-D051",
+        "EWD-D052",
+        "EWD-D053",
+        "EWD-D054"
+      ],
+      "evidence_ids": [
+        "EWD-00760",
+        "EWD-00761",
+        "EWD-00762"
+      ],
+      "id": "EWD-D055",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048",
+        "EWD-D049",
+        "EWD-D050",
+        "EWD-D051",
+        "EWD-D052",
+        "EWD-D053",
+        "EWD-D054",
+        "EWD-D055"
+      ],
+      "evidence_ids": [
+        "EWD-00783",
+        "EWD-00784",
+        "EWD-00785"
+      ],
+      "id": "EWD-D056",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048",
+        "EWD-D049",
+        "EWD-D050",
+        "EWD-D051",
+        "EWD-D052",
+        "EWD-D053",
+        "EWD-D054",
+        "EWD-D055",
+        "EWD-D056"
+      ],
+      "evidence_ids": [
+        "EWD-00806",
+        "EWD-00807",
+        "EWD-00808"
+      ],
+      "id": "EWD-D057",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048",
+        "EWD-D049",
+        "EWD-D050",
+        "EWD-D051",
+        "EWD-D052",
+        "EWD-D053",
+        "EWD-D054",
+        "EWD-D055",
+        "EWD-D056",
+        "EWD-D057"
+      ],
+      "evidence_ids": [
+        "EWD-00829",
+        "EWD-00830",
+        "EWD-00831"
+      ],
+      "id": "EWD-D058",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048",
+        "EWD-D049",
+        "EWD-D050",
+        "EWD-D051",
+        "EWD-D052",
+        "EWD-D053",
+        "EWD-D054",
+        "EWD-D055",
+        "EWD-D056",
+        "EWD-D057",
+        "EWD-D058"
+      ],
+      "evidence_ids": [
+        "EWD-00852",
+        "EWD-00853",
+        "EWD-00854"
+      ],
+      "id": "EWD-D059",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048",
+        "EWD-D049",
+        "EWD-D050",
+        "EWD-D051",
+        "EWD-D052",
+        "EWD-D053",
+        "EWD-D054",
+        "EWD-D055",
+        "EWD-D056",
+        "EWD-D057",
+        "EWD-D058",
+        "EWD-D059"
+      ],
+      "evidence_ids": [
+        "EWD-00875",
+        "EWD-00876",
+        "EWD-00877"
+      ],
+      "id": "EWD-D060",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048",
+        "EWD-D049",
+        "EWD-D050",
+        "EWD-D051",
+        "EWD-D052",
+        "EWD-D053",
+        "EWD-D054",
+        "EWD-D055",
+        "EWD-D056",
+        "EWD-D057",
+        "EWD-D058",
+        "EWD-D059",
+        "EWD-D060"
+      ],
+      "evidence_ids": [
+        "EWD-00898",
+        "EWD-00899",
+        "EWD-00900"
+      ],
+      "id": "EWD-D061",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048",
+        "EWD-D049",
+        "EWD-D050",
+        "EWD-D051",
+        "EWD-D052",
+        "EWD-D053",
+        "EWD-D054",
+        "EWD-D055",
+        "EWD-D056",
+        "EWD-D057",
+        "EWD-D058",
+        "EWD-D059",
+        "EWD-D060",
+        "EWD-D061"
+      ],
+      "evidence_ids": [
+        "EWD-00921",
+        "EWD-00922",
+        "EWD-00923"
+      ],
+      "id": "EWD-D062",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048",
+        "EWD-D049",
+        "EWD-D050",
+        "EWD-D051",
+        "EWD-D052",
+        "EWD-D053",
+        "EWD-D054",
+        "EWD-D055",
+        "EWD-D056",
+        "EWD-D057",
+        "EWD-D058",
+        "EWD-D059",
+        "EWD-D060",
+        "EWD-D061",
+        "EWD-D062"
+      ],
+      "evidence_ids": [
+        "EWD-00944",
+        "EWD-00945",
+        "EWD-00946"
+      ],
+      "id": "EWD-D063",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048",
+        "EWD-D049",
+        "EWD-D050",
+        "EWD-D051",
+        "EWD-D052",
+        "EWD-D053",
+        "EWD-D054",
+        "EWD-D055",
+        "EWD-D056",
+        "EWD-D057",
+        "EWD-D058",
+        "EWD-D059",
+        "EWD-D060",
+        "EWD-D061",
+        "EWD-D062",
+        "EWD-D063"
+      ],
+      "evidence_ids": [
+        "EWD-00967",
+        "EWD-00968",
+        "EWD-00969"
+      ],
+      "id": "EWD-D064",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048",
+        "EWD-D049",
+        "EWD-D050",
+        "EWD-D051",
+        "EWD-D052",
+        "EWD-D053",
+        "EWD-D054",
+        "EWD-D055",
+        "EWD-D056",
+        "EWD-D057",
+        "EWD-D058",
+        "EWD-D059",
+        "EWD-D060",
+        "EWD-D061",
+        "EWD-D062",
+        "EWD-D063",
+        "EWD-D064"
+      ],
+      "evidence_ids": [
+        "EWD-00990",
+        "EWD-00991",
+        "EWD-00992"
+      ],
+      "id": "EWD-D065",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048",
+        "EWD-D049",
+        "EWD-D050",
+        "EWD-D051",
+        "EWD-D052",
+        "EWD-D053",
+        "EWD-D054",
+        "EWD-D055",
+        "EWD-D056",
+        "EWD-D057",
+        "EWD-D058",
+        "EWD-D059",
+        "EWD-D060",
+        "EWD-D061",
+        "EWD-D062",
+        "EWD-D063",
+        "EWD-D064",
+        "EWD-D065"
+      ],
+      "evidence_ids": [
+        "EWD-01013",
+        "EWD-01014",
+        "EWD-01015"
+      ],
+      "id": "EWD-D066",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048",
+        "EWD-D049",
+        "EWD-D050",
+        "EWD-D051",
+        "EWD-D052",
+        "EWD-D053",
+        "EWD-D054",
+        "EWD-D055",
+        "EWD-D056",
+        "EWD-D057",
+        "EWD-D058",
+        "EWD-D059",
+        "EWD-D060",
+        "EWD-D061",
+        "EWD-D062",
+        "EWD-D063",
+        "EWD-D064",
+        "EWD-D065",
+        "EWD-D066"
+      ],
+      "evidence_ids": [
+        "EWD-01036",
+        "EWD-01037",
+        "EWD-01038"
+      ],
+      "id": "EWD-D067",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048",
+        "EWD-D049",
+        "EWD-D050",
+        "EWD-D051",
+        "EWD-D052",
+        "EWD-D053",
+        "EWD-D054",
+        "EWD-D055",
+        "EWD-D056",
+        "EWD-D057",
+        "EWD-D058",
+        "EWD-D059",
+        "EWD-D060",
+        "EWD-D061",
+        "EWD-D062",
+        "EWD-D063",
+        "EWD-D064",
+        "EWD-D065",
+        "EWD-D066",
+        "EWD-D067"
+      ],
+      "evidence_ids": [
+        "EWD-01059",
+        "EWD-01060",
+        "EWD-01061"
+      ],
+      "id": "EWD-D068",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048",
+        "EWD-D049",
+        "EWD-D050",
+        "EWD-D051",
+        "EWD-D052",
+        "EWD-D053",
+        "EWD-D054",
+        "EWD-D055",
+        "EWD-D056",
+        "EWD-D057",
+        "EWD-D058",
+        "EWD-D059",
+        "EWD-D060",
+        "EWD-D061",
+        "EWD-D062",
+        "EWD-D063",
+        "EWD-D064",
+        "EWD-D065",
+        "EWD-D066",
+        "EWD-D067",
+        "EWD-D068"
+      ],
+      "evidence_ids": [
+        "EWD-01082",
+        "EWD-01083",
+        "EWD-01084"
+      ],
+      "id": "EWD-D069",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048",
+        "EWD-D049",
+        "EWD-D050",
+        "EWD-D051",
+        "EWD-D052",
+        "EWD-D053",
+        "EWD-D054",
+        "EWD-D055",
+        "EWD-D056",
+        "EWD-D057",
+        "EWD-D058",
+        "EWD-D059",
+        "EWD-D060",
+        "EWD-D061",
+        "EWD-D062",
+        "EWD-D063",
+        "EWD-D064",
+        "EWD-D065",
+        "EWD-D066",
+        "EWD-D067",
+        "EWD-D068",
+        "EWD-D069"
+      ],
+      "evidence_ids": [
+        "EWD-01105",
+        "EWD-01106",
+        "EWD-01107"
+      ],
+      "id": "EWD-D070",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048",
+        "EWD-D049",
+        "EWD-D050",
+        "EWD-D051",
+        "EWD-D052",
+        "EWD-D053",
+        "EWD-D054",
+        "EWD-D055",
+        "EWD-D056",
+        "EWD-D057",
+        "EWD-D058",
+        "EWD-D059",
+        "EWD-D060",
+        "EWD-D061",
+        "EWD-D062",
+        "EWD-D063",
+        "EWD-D064",
+        "EWD-D065",
+        "EWD-D066",
+        "EWD-D067",
+        "EWD-D068",
+        "EWD-D069",
+        "EWD-D070"
+      ],
+      "evidence_ids": [
+        "EWD-01128",
+        "EWD-01129",
+        "EWD-01130"
+      ],
+      "id": "EWD-D071",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048",
+        "EWD-D049",
+        "EWD-D050",
+        "EWD-D051",
+        "EWD-D052",
+        "EWD-D053",
+        "EWD-D054",
+        "EWD-D055",
+        "EWD-D056",
+        "EWD-D057",
+        "EWD-D058",
+        "EWD-D059",
+        "EWD-D060",
+        "EWD-D061",
+        "EWD-D062",
+        "EWD-D063",
+        "EWD-D064",
+        "EWD-D065",
+        "EWD-D066",
+        "EWD-D067",
+        "EWD-D068",
+        "EWD-D069",
+        "EWD-D070",
+        "EWD-D071"
+      ],
+      "evidence_ids": [
+        "EWD-01151",
+        "EWD-01152",
+        "EWD-01153"
+      ],
+      "id": "EWD-D072",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048",
+        "EWD-D049",
+        "EWD-D050",
+        "EWD-D051",
+        "EWD-D052",
+        "EWD-D053",
+        "EWD-D054",
+        "EWD-D055",
+        "EWD-D056",
+        "EWD-D057",
+        "EWD-D058",
+        "EWD-D059",
+        "EWD-D060",
+        "EWD-D061",
+        "EWD-D062",
+        "EWD-D063",
+        "EWD-D064",
+        "EWD-D065",
+        "EWD-D066",
+        "EWD-D067",
+        "EWD-D068",
+        "EWD-D069",
+        "EWD-D070",
+        "EWD-D071",
+        "EWD-D072"
+      ],
+      "evidence_ids": [
+        "EWD-01174",
+        "EWD-01175",
+        "EWD-01176"
+      ],
+      "id": "EWD-D073",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048",
+        "EWD-D049",
+        "EWD-D050",
+        "EWD-D051",
+        "EWD-D052",
+        "EWD-D053",
+        "EWD-D054",
+        "EWD-D055",
+        "EWD-D056",
+        "EWD-D057",
+        "EWD-D058",
+        "EWD-D059",
+        "EWD-D060",
+        "EWD-D061",
+        "EWD-D062",
+        "EWD-D063",
+        "EWD-D064",
+        "EWD-D065",
+        "EWD-D066",
+        "EWD-D067",
+        "EWD-D068",
+        "EWD-D069",
+        "EWD-D070",
+        "EWD-D071",
+        "EWD-D072",
+        "EWD-D073"
+      ],
+      "evidence_ids": [
+        "EWD-01197",
+        "EWD-01198",
+        "EWD-01199"
+      ],
+      "id": "EWD-D074",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048",
+        "EWD-D049",
+        "EWD-D050",
+        "EWD-D051",
+        "EWD-D052",
+        "EWD-D053",
+        "EWD-D054",
+        "EWD-D055",
+        "EWD-D056",
+        "EWD-D057",
+        "EWD-D058",
+        "EWD-D059",
+        "EWD-D060",
+        "EWD-D061",
+        "EWD-D062",
+        "EWD-D063",
+        "EWD-D064",
+        "EWD-D065",
+        "EWD-D066",
+        "EWD-D067",
+        "EWD-D068",
+        "EWD-D069",
+        "EWD-D070",
+        "EWD-D071",
+        "EWD-D072",
+        "EWD-D073",
+        "EWD-D074"
+      ],
+      "evidence_ids": [
+        "EWD-01220",
+        "EWD-01221",
+        "EWD-01222"
+      ],
+      "id": "EWD-D075",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048",
+        "EWD-D049",
+        "EWD-D050",
+        "EWD-D051",
+        "EWD-D052",
+        "EWD-D053",
+        "EWD-D054",
+        "EWD-D055",
+        "EWD-D056",
+        "EWD-D057",
+        "EWD-D058",
+        "EWD-D059",
+        "EWD-D060",
+        "EWD-D061",
+        "EWD-D062",
+        "EWD-D063",
+        "EWD-D064",
+        "EWD-D065",
+        "EWD-D066",
+        "EWD-D067",
+        "EWD-D068",
+        "EWD-D069",
+        "EWD-D070",
+        "EWD-D071",
+        "EWD-D072",
+        "EWD-D073",
+        "EWD-D074",
+        "EWD-D075"
+      ],
+      "evidence_ids": [
+        "EWD-01243",
+        "EWD-01244",
+        "EWD-01245"
+      ],
+      "id": "EWD-D076",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048",
+        "EWD-D049",
+        "EWD-D050",
+        "EWD-D051",
+        "EWD-D052",
+        "EWD-D053",
+        "EWD-D054",
+        "EWD-D055",
+        "EWD-D056",
+        "EWD-D057",
+        "EWD-D058",
+        "EWD-D059",
+        "EWD-D060",
+        "EWD-D061",
+        "EWD-D062",
+        "EWD-D063",
+        "EWD-D064",
+        "EWD-D065",
+        "EWD-D066",
+        "EWD-D067",
+        "EWD-D068",
+        "EWD-D069",
+        "EWD-D070",
+        "EWD-D071",
+        "EWD-D072",
+        "EWD-D073",
+        "EWD-D074",
+        "EWD-D075",
+        "EWD-D076"
+      ],
+      "evidence_ids": [
+        "EWD-01266",
+        "EWD-01267",
+        "EWD-01268"
+      ],
+      "id": "EWD-D077",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048",
+        "EWD-D049",
+        "EWD-D050",
+        "EWD-D051",
+        "EWD-D052",
+        "EWD-D053",
+        "EWD-D054",
+        "EWD-D055",
+        "EWD-D056",
+        "EWD-D057",
+        "EWD-D058",
+        "EWD-D059",
+        "EWD-D060",
+        "EWD-D061",
+        "EWD-D062",
+        "EWD-D063",
+        "EWD-D064",
+        "EWD-D065",
+        "EWD-D066",
+        "EWD-D067",
+        "EWD-D068",
+        "EWD-D069",
+        "EWD-D070",
+        "EWD-D071",
+        "EWD-D072",
+        "EWD-D073",
+        "EWD-D074",
+        "EWD-D075",
+        "EWD-D076",
+        "EWD-D077"
+      ],
+      "evidence_ids": [
+        "EWD-01289",
+        "EWD-01290",
+        "EWD-01291"
+      ],
+      "id": "EWD-D078",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".kaptaind/integration"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D012",
+        "EWD-D013",
+        "EWD-D014",
+        "EWD-D015",
+        "EWD-D016",
+        "EWD-D017",
+        "EWD-D018",
+        "EWD-D019",
+        "EWD-D020",
+        "EWD-D021",
+        "EWD-D022",
+        "EWD-D023",
+        "EWD-D024",
+        "EWD-D025",
+        "EWD-D026",
+        "EWD-D027",
+        "EWD-D028",
+        "EWD-D029",
+        "EWD-D030",
+        "EWD-D031",
+        "EWD-D032",
+        "EWD-D033",
+        "EWD-D034",
+        "EWD-D035",
+        "EWD-D036",
+        "EWD-D037",
+        "EWD-D038",
+        "EWD-D039",
+        "EWD-D040",
+        "EWD-D041",
+        "EWD-D042",
+        "EWD-D043",
+        "EWD-D044",
+        "EWD-D045",
+        "EWD-D046",
+        "EWD-D047",
+        "EWD-D048",
+        "EWD-D049",
+        "EWD-D050",
+        "EWD-D051",
+        "EWD-D052",
+        "EWD-D053",
+        "EWD-D054",
+        "EWD-D055",
+        "EWD-D056",
+        "EWD-D057",
+        "EWD-D058",
+        "EWD-D059",
+        "EWD-D060",
+        "EWD-D061",
+        "EWD-D062",
+        "EWD-D063",
+        "EWD-D064",
+        "EWD-D065",
+        "EWD-D066",
+        "EWD-D067",
+        "EWD-D068",
+        "EWD-D069",
+        "EWD-D070",
+        "EWD-D071",
+        "EWD-D072",
+        "EWD-D073",
+        "EWD-D074",
+        "EWD-D075",
+        "EWD-D076",
+        "EWD-D077",
+        "EWD-D078"
+      ],
+      "evidence_ids": [
+        "EWD-01299",
+        "EWD-01300",
+        "EWD-01301"
+      ],
+      "id": "EWD-D079",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".lwoodz"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [],
+      "evidence_ids": [
+        "EWD-01311",
+        "EWD-01312",
+        "EWD-01313"
+      ],
+      "id": "EWD-D080",
+      "objective": "Remove pkg-config native library discovery (major readiness impact)",
+      "priority": "P1",
+      "remediation": "use vcpkg, or emit cargo link directives from a build script on Windows Recommended path (foss-substitution): vcpkg — first-class cargo integration (`vcpkg` build helper) and the standard native dependency source on Windows.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".uni"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D001",
+        "EWD-D002"
+      ],
+      "evidence_ids": [
+        "EWD-01314",
+        "EWD-01315",
+        "EWD-01316",
+        "EWD-01317",
+        "EWD-01318",
+        "EWD-01319",
+        "EWD-01320",
+        "EWD-01321"
+      ],
+      "id": "EWD-D081",
+      "objective": "Remove hard-coded POSIX absolute path (/home/...) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "derive the path from configuration or use platform-appropriate directories (e.g. %APPDATA%, %ProgramData%) Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".uni"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D001",
+        "EWD-D002",
+        "EWD-D081"
+      ],
+      "evidence_ids": [
+        "EWD-01396"
+      ],
+      "id": "EWD-D082",
+      "objective": "Remove symlink creation or reliance (`symlink(...)`) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "symlinks are a restricted operation on Windows; abstract behind an fs trait Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".uni"
+      ],
+      "current_state": "requires-implementation",
+      "dependencies": [
+        "EWD-D001",
+        "EWD-D002",
+        "EWD-D081",
+        "EWD-D082"
+      ],
+      "evidence_ids": [
+        "EWD-01397"
+      ],
+      "id": "EWD-D083",
+      "objective": "Remove unix permission model (`PermissionsExt`) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "Windows has no st_mode; map to ACLs or drop the permission step on Windows Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".uni"
+      ],
+      "current_state": "requires-implementation",
+      "dependencies": [
+        "EWD-D001",
+        "EWD-D002",
+        "EWD-D081",
+        "EWD-D082",
+        "EWD-D083"
+      ],
+      "evidence_ids": [
+        "EWD-01398"
+      ],
+      "id": "EWD-D084",
+      "objective": "Remove unix mode literal (`0o755`) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "mode bits have no Windows equivalent; cfg-gate set_permissions calls Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".uni"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D001",
+        "EWD-D002",
+        "EWD-D081",
+        "EWD-D082",
+        "EWD-D083",
+        "EWD-D084"
+      ],
+      "evidence_ids": [
+        "EWD-01438"
+      ],
+      "id": "EWD-D085",
+      "objective": "Remove SysV init script dependency (major readiness impact)",
+      "priority": "P1",
+      "remediation": "replace with the Windows Service Control Manager Recommended path (foss-substitution): service-manager crate (Windows SCM) — mature FOSS crate wrapping the Service Control Manager; maps 1:1 to systemd unit semantics.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".uni"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D001",
+        "EWD-D002",
+        "EWD-D081",
+        "EWD-D082",
+        "EWD-D083",
+        "EWD-D084",
+        "EWD-D085"
+      ],
+      "evidence_ids": [
+        "EWD-01441"
+      ],
+      "id": "EWD-D086",
+      "objective": "Remove pkg-config native library discovery (major readiness impact)",
+      "priority": "P1",
+      "remediation": "use vcpkg, or emit cargo link directives from a build script on Windows Recommended path (foss-substitution): vcpkg — first-class cargo integration (`vcpkg` build helper) and the standard native dependency source on Windows.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        "."
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D003"
+      ],
+      "evidence_ids": [
+        "EWD-01450",
+        "EWD-01451",
+        "EWD-01452"
+      ],
+      "id": "EWD-D087",
+      "objective": "Remove pkg-config native library discovery (major readiness impact)",
+      "priority": "P1",
+      "remediation": "use vcpkg, or emit cargo link directives from a build script on Windows Recommended path (foss-substitution): vcpkg — first-class cargo integration (`vcpkg` build helper) and the standard native dependency source on Windows.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        "."
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D003",
+        "EWD-D087"
+      ],
+      "evidence_ids": [
+        "EWD-01455"
+      ],
+      "id": "EWD-D088",
+      "objective": "Remove pkg-config native library discovery (major readiness impact)",
+      "priority": "P1",
+      "remediation": "use vcpkg, or emit cargo link directives from a build script on Windows Recommended path (foss-substitution): vcpkg — first-class cargo integration (`vcpkg` build helper) and the standard native dependency source on Windows.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        "crates/azusa-fs/src"
+      ],
+      "current_state": "replaceable",
+      "dependencies": [
+        "EWD-D005"
+      ],
+      "evidence_ids": [
+        "EWD-01491"
+      ],
+      "id": "EWD-D089",
+      "objective": "Remove symlink creation or reliance (`symlink(...)`) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "symlinks are a restricted operation on Windows; abstract behind an fs trait Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        "crates/azusa-fs/src"
+      ],
+      "current_state": "requires-implementation",
+      "dependencies": [
+        "EWD-D005",
+        "EWD-D089"
+      ],
+      "evidence_ids": [
+        "EWD-01492",
+        "EWD-01493"
+      ],
+      "id": "EWD-D090",
+      "objective": "Remove unix permission model (`PermissionsExt`) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "Windows has no st_mode; map to ACLs or drop the permission step on Windows Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        "crates/azusa-fs/src"
+      ],
+      "current_state": "requires-implementation",
+      "dependencies": [
+        "EWD-D005",
+        "EWD-D089",
+        "EWD-D090"
+      ],
+      "evidence_ids": [
+        "EWD-01494"
+      ],
+      "id": "EWD-D091",
+      "objective": "Remove unix mode literal (`0o755`) (major readiness impact)",
+      "priority": "P1",
+      "remediation": "mode bits have no Windows equivalent; cfg-gate set_permissions calls Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms",
+        "Output equivalence test: Linux vs Windows behaviour identical on a golden input",
+        "CI matrix (ubuntu-latest, windows-latest) passes"
+      ]
+    },
+    {
+      "affected_components": [
+        ".github/workflows"
+      ],
+      "current_state": "configurable",
+      "dependencies": [],
+      "evidence_ids": [
+        "EWD-00003"
+      ],
+      "id": "EWD-D092",
+      "objective": "Remove GitHub Actions CI (Linux-only unless a windows matrix exists) (minor readiness impact)",
+      "priority": "P2",
+      "remediation": "extend the matrix with `os: [windows-latest]`",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms"
+      ]
+    },
+    {
+      "affected_components": [
+        ".uni"
+      ],
+      "current_state": "adaptable",
+      "dependencies": [
+        "EWD-D001",
+        "EWD-D002",
+        "EWD-D081",
+        "EWD-D082",
+        "EWD-D083",
+        "EWD-D084",
+        "EWD-D085",
+        "EWD-D086"
+      ],
+      "evidence_ids": [
+        "EWD-01324",
+        "EWD-01327",
+        "EWD-01331",
+        "EWD-01333",
+        "EWD-01335",
+        "EWD-01338",
+        "EWD-01341",
+        "EWD-01343"
+      ],
+      "id": "EWD-D093",
+      "objective": "Remove unix-style path join in string literal (minor readiness impact)",
+      "priority": "P2",
+      "remediation": "use std::path::Path::join or std::path::MAIN_SEPARATOR Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms"
+      ]
+    },
+    {
+      "affected_components": [
+        ".uni"
+      ],
+      "current_state": "configurable",
+      "dependencies": [
+        "EWD-D001",
+        "EWD-D002",
+        "EWD-D081",
+        "EWD-D082",
+        "EWD-D083",
+        "EWD-D084",
+        "EWD-D085",
+        "EWD-D086",
+        "EWD-D093"
+      ],
+      "evidence_ids": [
+        "EWD-01442"
+      ],
+      "id": "EWD-D094",
+      "objective": "Remove unix environment variable / user identity assumption (minor readiness impact)",
+      "priority": "P2",
+      "remediation": "read per-OS variables (APPDATA, USERPROFILE, LOCALAPPDATA) via a platform abstraction Recommended path (configuration-change): cfg(target_os) env var table — small hand-rolled mapping when adding a dependency is undesirable.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms"
+      ]
+    },
+    {
+      "affected_components": [
+        "crates/azusa-graph/src"
+      ],
+      "current_state": "adaptable",
+      "dependencies": [],
+      "evidence_ids": [
+        "EWD-01507",
+        "EWD-01508"
+      ],
+      "id": "EWD-D095",
+      "objective": "Remove unix-style path join in string literal (minor readiness impact)",
+      "priority": "P2",
+      "remediation": "use std::path::Path::join or std::path::MAIN_SEPARATOR Recommended path (existing-portable): std::path::PathBuf + directories crate — pure-Rust path handling already portable; only hard-coded literals need replacing.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms"
+      ]
+    },
+    {
+      "affected_components": [
+        "."
+      ],
+      "current_state": "configurable",
+      "dependencies": [
+        "EWD-D003",
+        "EWD-D087",
+        "EWD-D088"
+      ],
+      "evidence_ids": [
+        "EWD-01515"
+      ],
+      "id": "EWD-D096",
+      "objective": "Remove unix environment variable / user identity assumption (minor readiness impact)",
+      "priority": "P2",
+      "remediation": "read per-OS variables (APPDATA, USERPROFILE, LOCALAPPDATA) via a platform abstraction Recommended path (configuration-change): cfg(target_os) env var table — small hand-rolled mapping when adding a dependency is undesirable.",
+      "target_state": "windows-compatible",
+      "validation_plan": [
+        "Linux build passes (cargo build)",
+        "Windows build passes (cargo build --target x86_64-pc-windows-msvc)",
+        "Unit test suite passes on both platforms"
+      ]
+    }
+  ],
+  "target": "windows"
+}

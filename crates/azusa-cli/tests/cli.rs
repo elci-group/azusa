@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The azusa Authors
+// SPDX-License-Identifier: MIT
+
 //! End-to-end CLI tests.
 //!
 //! Fixtures are real Git repositories built with the `git` binary (test code
@@ -247,12 +250,287 @@ fn quiet_mode_prints_nothing() {
         .get_output()
         .stdout
         .clone();
-    assert!(output.is_empty());
+    assert!(output.is_empty(), "expected no stdout, got {output:?}");
 }
 
 #[test]
 fn help_exits_zero() {
     azusa().arg("--help").assert().code(0);
+}
+
+#[test]
+fn policy_check_exits_three_on_violation() {
+    let fixture = Fixture::new();
+    // Commit local work, then set a policy the drift violates.
+    std::fs::write(fixture.path.join("feature.rs"), "pub fn feature() {}\n").expect("write");
+    fixture.git(&["add", "."]);
+    fixture.git(&["commit", "-m", "feat: feature"]);
+    std::fs::write(
+        fixture.path.join("azusa.toml"),
+        "[policy]\nmax_drift = 0.1\n",
+    )
+    .expect("write");
+
+    azusa()
+        .arg("policy")
+        .arg("check")
+        .arg("--json")
+        .current_dir(&fixture.path)
+        .assert()
+        .code(3)
+        .stdout(contains("\"rule\": \"policy.max_drift\""));
+
+    let events = std::fs::read_to_string(fixture.path.join(".azusa/events.jsonl"))
+        .expect("events log");
+    assert!(
+        events.contains("\"azusa.policy.failed\""),
+        "policy failure should be emitted: {events}"
+    );
+}
+
+#[test]
+fn policy_check_passes_with_generous_limits() {
+    let fixture = Fixture::new();
+    azusa()
+        .arg("policy")
+        .arg("check")
+        .current_dir(&fixture.path)
+        .assert()
+        .code(0)
+        .stdout(contains("compliant"));
+}
+
+#[test]
+fn export_writes_artefact_and_events() {
+    let fixture = Fixture::new();
+    let output = azusa()
+        .arg("export")
+        .arg("--json")
+        .current_dir(&fixture.path)
+        .assert()
+        .code(0)
+        .get_output()
+        .stdout
+        .clone();
+    let parsed: serde_json::Value = serde_json::from_slice(&output).expect("json");
+    let export_path = std::path::PathBuf::from(parsed["export"].as_str().expect("export path"));
+    assert!(export_path.is_file(), "artefact missing: {export_path:?}");
+    let events_path = std::path::PathBuf::from(parsed["events"].as_str().expect("events path"));
+    assert!(events_path.is_file());
+}
+
+#[test]
+fn drift_records_history() {
+    let fixture = Fixture::new();
+    azusa()
+        .arg("drift")
+        .arg("--quiet")
+        .current_dir(&fixture.path)
+        .assert()
+        .code(0);
+    let history = fixture.path.join(".azusa/history.jsonl");
+    assert!(history.is_file());
+}
+
+#[test]
+fn plan_exports_artefact_and_emits_event() {
+    let fixture = Fixture::new();
+    let output = azusa()
+        .arg("plan")
+        .arg("--json")
+        .current_dir(&fixture.path)
+        .assert()
+        .code(0)
+        .get_output()
+        .stdout
+        .clone();
+    let parsed: serde_json::Value = serde_json::from_slice(&output).expect("json");
+    let plan = &parsed["plan"];
+    assert_eq!(plan["schema_version"], 1);
+    assert!(plan["steps"].as_array().expect("steps").iter().any(|s| s["kind"] == "noop"));
+    let export_path =
+        std::path::PathBuf::from(parsed["export"].as_str().expect("export path"));
+    assert!(export_path.is_file(), "plan artefact missing: {export_path:?}");
+    let events = std::fs::read_to_string(fixture.path.join(".azusa/events.jsonl"))
+        .expect("events log");
+    assert!(
+        events.contains("\"azusa.plan.generated\""),
+        "plan event should be emitted: {events}"
+    );
+}
+
+#[test]
+fn plan_is_blocked_by_policy_violation() {
+    let fixture = Fixture::new();
+    std::fs::write(fixture.path.join("feature.rs"), "pub fn feature() {}\n").expect("write");
+    fixture.git(&["add", "."]);
+    fixture.git(&["commit", "-m", "feat: feature"]);
+    std::fs::write(
+        fixture.path.join("azusa.toml"),
+        "[policy]\nmax_drift = 0.1\n",
+    )
+    .expect("write");
+
+    let output = azusa()
+        .arg("plan")
+        .arg("--json")
+        .current_dir(&fixture.path)
+        .assert()
+        .code(1)
+        .get_output()
+        .stdout
+        .clone();
+    let parsed: serde_json::Value = serde_json::from_slice(&output).expect("json");
+    let gates = parsed["plan"]["gates"].as_array().expect("gates");
+    assert!(
+        gates
+            .iter()
+            .any(|g| g["blocking"] == true && g["condition"].as_str().expect("cond").contains("policy")),
+        "policy gate should block: {gates:?}"
+    );
+}
+
+#[test]
+fn watch_first_cycle_analyses_and_persists_state() {
+    let fixture = Fixture::new();
+    let output = azusa()
+        .arg("watch")
+        .arg("--max-cycles")
+        .arg("1")
+        .arg("--interval")
+        .arg("0")
+        .arg("--json")
+        .current_dir(&fixture.path)
+        .assert()
+        .code(0)
+        .get_output()
+        .stdout
+        .clone();
+    let parsed: serde_json::Value = serde_json::from_slice(&output).expect("json");
+    assert_eq!(parsed["changed"], true);
+    assert_eq!(parsed["stage"], 1);
+    assert!(fixture.path.join(".azusa/watch.json").is_file());
+    let history = std::fs::read_to_string(fixture.path.join(".azusa/history.jsonl"))
+        .expect("history");
+    assert_eq!(
+        history.lines().count(),
+        1,
+        "one analysis should append one history record"
+    );
+}
+
+#[test]
+fn watch_idle_cycle_skips_analysis() {
+    let fixture = Fixture::new();
+    for _ in 0..2 {
+        azusa()
+            .arg("watch")
+            .arg("--max-cycles")
+            .arg("1")
+            .arg("--interval")
+            .arg("0")
+            .arg("--json")
+            .current_dir(&fixture.path)
+            .assert()
+            .code(0);
+    }
+    let output = azusa()
+        .arg("watch")
+        .arg("--max-cycles")
+        .arg("1")
+        .arg("--interval")
+        .arg("0")
+        .arg("--json")
+        .current_dir(&fixture.path)
+        .assert()
+        .code(0)
+        .get_output()
+        .stdout
+        .clone();
+    let parsed: serde_json::Value = serde_json::from_slice(&output).expect("json");
+    assert_eq!(parsed["changed"], false);
+    assert_eq!(parsed["stage"], 0, "idle cycle de-escalates to stage 0");
+    let history = std::fs::read_to_string(fixture.path.join(".azusa/history.jsonl"))
+        .expect("history");
+    assert_eq!(
+        history.lines().count(),
+        1,
+        "idle cycle must not append history"
+    );
+}
+
+#[test]
+fn watch_escalates_and_generates_plan_on_growth() {
+    let fixture = Fixture::new();
+    azusa()
+        .arg("watch")
+        .arg("--max-cycles")
+        .arg("1")
+        .arg("--interval")
+        .arg("0")
+        .arg("--json")
+        .current_dir(&fixture.path)
+        .assert()
+        .code(0);
+
+    // Local uncommitted work: drift grows from the idle baseline.
+    std::fs::write(fixture.path.join("dirty.rs"), "pub fn dirty() {}\n").expect("write");
+    let output = azusa()
+        .arg("watch")
+        .arg("--max-cycles")
+        .arg("1")
+        .arg("--interval")
+        .arg("0")
+        .arg("--json")
+        .current_dir(&fixture.path)
+        .assert()
+        .code(1)
+        .get_output()
+        .stdout
+        .clone();
+    let parsed: serde_json::Value = serde_json::from_slice(&output).expect("json");
+    assert_eq!(parsed["stage"], 2, "score growth should escalate to stage 2");
+    let plan_path = std::path::PathBuf::from(parsed["plan"].as_str().expect("plan path"));
+    assert!(plan_path.is_file(), "escalated cycle should export a plan");
+    let events = std::fs::read_to_string(fixture.path.join(".azusa/events.jsonl"))
+        .expect("events log");
+    assert!(
+        events.contains("\"azusa.plan.generated\""),
+        "escalation should emit the plan event: {events}"
+    );
+}
+
+#[test]
+fn intent_is_reported_for_structural_drift() {
+    let fixture = Fixture::new();
+    // Feature-branch-style work: new module + tests, committed.
+    fixture.git(&["checkout", "-b", "feature/engine"]);
+    std::fs::create_dir_all(fixture.path.join("crates/engine/src")).expect("mkdir");
+    std::fs::write(
+        fixture.path.join("crates/engine/Cargo.toml"),
+        "[package]\nname = \"engine\"\nversion = \"0.1.0\"\n",
+    )
+    .expect("write");
+    std::fs::write(
+        fixture.path.join("crates/engine/src/lib.rs"),
+        "pub fn e() {}\n",
+    )
+    .expect("write");
+    std::fs::write(
+        fixture.path.join("Cargo.toml"),
+        "[workspace]\nmembers = [\"crates/engine\"]\n",
+    )
+    .expect("write");
+    fixture.git(&["add", "."]);
+    fixture.git(&["commit", "-m", "feat: engine crate"]);
+
+    azusa()
+        .arg("explain")
+        .current_dir(&fixture.path)
+        .assert()
+        .code(1)
+        .stdout(contains("INTENT"))
+        .stdout(contains("feature/engine"));
 }
 
 #[test]

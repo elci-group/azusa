@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The azusa Authors
+// SPDX-License-Identifier: MIT
+
 //! Azusa Git state provider.
 //!
 //! Resolves state selectors (`worktree`, `index`, `head`, `upstream`,

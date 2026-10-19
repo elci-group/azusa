@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The azusa Authors
+// SPDX-License-Identifier: MIT
+
 //! Test fixtures: minimal real Git repositories built with libgit2.
 //!
 //! Fixture methods return the commit id for convenience; callers routinely

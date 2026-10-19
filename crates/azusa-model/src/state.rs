@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The azusa Authors
+// SPDX-License-Identifier: MIT
+
 //! Repository state model.
 //!
 //! A [`RepositoryState`] is a provider-independent snapshot of one observable
@@ -325,6 +328,20 @@ impl ConfigurationKind {
             Self::Other => "other",
         }
     }
+
+    /// Whether this kind describes deployment- or service-facing
+    /// infrastructure (the L9 operations surface).
+    #[must_use]
+    pub fn is_operational(self) -> bool {
+        matches!(
+            self,
+            Self::CiWorkflow
+                | Self::Dockerfile
+                | Self::Kubernetes
+                | Self::SystemdUnit
+                | Self::Compose
+        )
+    }
 }
 
 /// One configuration file observed in the state.
@@ -343,6 +360,24 @@ pub struct ConfigurationFile {
 pub struct ConfigurationState {
     /// Configuration files of interest.
     pub files: Vec<ConfigurationFile>,
+}
+
+/// One operational unit: a deployment- or service-facing artefact.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct OperationalUnit {
+    /// Repository-relative path.
+    pub path: String,
+    /// Operational classification (CI workflow, container, service unit…).
+    pub kind: ConfigurationKind,
+    /// Content digest.
+    pub digest: ContentHash,
+}
+
+/// The operations facet: the deployment/service surface of the state.
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
+pub struct OperationalState {
+    /// Operational units of interest.
+    pub units: Vec<OperationalUnit>,
 }
 
 /// The behaviour facet: tests, entry points, build scripts, public surface.
@@ -378,6 +413,8 @@ pub struct RepositoryState {
     pub dependencies: DependencyState,
     /// Configuration facet.
     pub configuration: ConfigurationState,
+    /// Operations facet: the deployment/service surface.
+    pub operations: OperationalState,
     /// Behaviour facet, when behaviour analysis ran.
     pub behaviour: Option<BehaviourState>,
     /// Raw UTF-8 text of analysis-interest files (manifests, lockfiles,
@@ -396,8 +433,9 @@ pub const CAPTURED_TEXT_MAX_BYTES: usize = 128 * 1024;
 /// providers retain its text in [`RepositoryState::captured_text`].
 ///
 /// Interest = Cargo manifests and lockfiles, toolchain and formatter/linter
-/// configuration, CI workflows, container and service definitions — the
-/// files whose *text* (not just hash) feeds layers L3–L5.
+/// configuration, CI workflows, container and service definitions (feeding
+/// layers L3–L5), plus the behavioural surface: build scripts, library and
+/// binary roots, and integration tests/benches (feeding layers L6–L7).
 #[must_use]
 pub fn is_analysis_file(path: &str) -> bool {
     let name = path.rsplit('/').next().unwrap_or(path);
@@ -430,7 +468,29 @@ pub fn is_analysis_file(path: &str) -> bool {
     {
         return true;
     }
-    name.ends_with(".service")
+    if name.ends_with(".service") {
+        return true;
+    }
+    is_behaviour_file(path)
+}
+
+/// Whether a path is part of the behavioural surface (layers L6–L7): build
+/// scripts, library/binary roots, and Rust integration tests or benches.
+#[must_use]
+pub fn is_behaviour_file(path: &str) -> bool {
+    let is_rust = std::path::Path::new(path)
+        .extension()
+        .is_some_and(|ext| ext.eq_ignore_ascii_case("rs"));
+    let name = path.rsplit('/').next().unwrap_or(path);
+    if name == "build.rs" {
+        return true;
+    }
+    let segments: Vec<&str> = path.split('/').collect();
+    segments.windows(2).any(|window| match window {
+        ["src", "lib.rs" | "main.rs"] => true,
+        ["src", "bin"] | ["tests" | "benches", _] => is_rust,
+        _ => false,
+    })
 }
 
 impl RepositoryState {
@@ -452,6 +512,7 @@ impl RepositoryState {
             structure: StructureState::default(),
             dependencies: DependencyState::default(),
             configuration: ConfigurationState::default(),
+            operations: OperationalState::default(),
             behaviour: None,
             captured_text: BTreeMap::new(),
         }
@@ -466,8 +527,8 @@ mod tests {
     fn empty_state_is_consistent() {
         let state = RepositoryState::empty(ProviderKind::Filesystem, "nothing");
         assert_eq!(state.identity.file_count, 0);
-        assert!(state.filesystem.is_empty());
-        assert!(state.identity.digest.is_empty());
+        assert!(state.filesystem.is_empty(), "filesystem should be empty");
+        assert!(state.identity.digest.is_empty(), "digest should be empty");
     }
 
     #[test]
@@ -485,8 +546,25 @@ mod tests {
         assert!(is_analysis_file(".github/workflows/ci.yml"));
         assert!(is_analysis_file("deploy/Dockerfile"));
         assert!(is_analysis_file("deploy/api.service"));
-        assert!(!is_analysis_file("src/main.rs"));
         assert!(!is_analysis_file("docs/ci.md"));
+    }
+
+    #[test]
+    fn behaviour_interest_predicate() {
+        assert!(is_analysis_file("src/lib.rs"));
+        assert!(is_analysis_file("src/main.rs"));
+        assert!(is_analysis_file("crates/app/src/lib.rs"));
+        assert!(is_analysis_file("crates/app/src/bin/run.rs"));
+        assert!(is_analysis_file("tests/cli.rs"));
+        assert!(is_analysis_file("crates/app/tests/integration.rs"));
+        assert!(is_analysis_file("benches/wide.rs"));
+        assert!(is_analysis_file("build.rs"));
+        assert!(is_analysis_file("crates/app/build.rs"));
+        assert!(!is_analysis_file("tests/fixtures/data.json"));
+        assert!(!is_analysis_file("docs/notes.rs"));
+        assert!(!is_analysis_file("src/helpers/util.rs"));
+        assert!(is_behaviour_file("src/lib.rs"));
+        assert!(!is_behaviour_file("Cargo.toml"));
     }
 
     #[test]

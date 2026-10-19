@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The azusa Authors
+// SPDX-License-Identifier: MIT
+
 //! Configuration-file classification.
 //!
 //! Maps repository paths onto [`ConfigurationKind`]s so layer L5 can

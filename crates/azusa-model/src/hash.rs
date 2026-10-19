@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The azusa Authors
+// SPDX-License-Identifier: MIT
+
 //! Content hashing primitives.
 //!
 //! Azusa hashes file content with BLAKE3 and derives deterministic digests

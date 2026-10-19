@@ -1,0 +1,1006 @@
+{
+  "file_to_findings": {
+    ".azusa/exports/drift-20260912T154020Z-85b9cb0e.json": [
+      "FND-00001"
+    ],
+    ".azusa/exports/drift-20260912T154031Z-85b9cb0e.json": [
+      "FND-00002"
+    ],
+    ".github/workflows/ci.yml": [
+      "FND-00003"
+    ],
+    ".kaptaind/analysis/06a8476e-cb42-476d-b725-643bfc4d9422.json": [
+      "FND-00004",
+      "FND-00004",
+      "FND-00004",
+      "FND-00004",
+      "FND-00004"
+    ],
+    ".kaptaind/analysis/1c5f02a5-c191-4b9f-acf1-0f252b15ac66.json": [
+      "FND-00005",
+      "FND-00005",
+      "FND-00005",
+      "FND-00005",
+      "FND-00005",
+      "FND-00005"
+    ],
+    ".kaptaind/analysis/33b3b544-029a-4c2e-b8b1-429a198ee9cb.json": [
+      "FND-00006",
+      "FND-00006"
+    ],
+    ".kaptaind/analysis/56bae483-a675-457b-bc6d-e4477273a0b5.json": [
+      "FND-00007",
+      "FND-00007",
+      "FND-00007"
+    ],
+    ".kaptaind/analysis/5fa1fb47-ba75-4a11-acb8-c26c5b794cb8.json": [
+      "FND-00008",
+      "FND-00008",
+      "FND-00008"
+    ],
+    ".kaptaind/analysis/793e6e90-e79f-4d5e-a52b-1924b7833f21.json": [
+      "FND-00009",
+      "FND-00009"
+    ],
+    ".kaptaind/analysis/90737c4e-25b4-4941-aac2-cfc9155576e3.json": [
+      "FND-00010",
+      "FND-00010",
+      "FND-00010",
+      "FND-00010",
+      "FND-00010"
+    ],
+    ".kaptaind/analysis/b8182077-1c4e-41f1-9456-a90d52307325.json": [
+      "FND-00011",
+      "FND-00011",
+      "FND-00011",
+      "FND-00011"
+    ],
+    ".kaptaind/analysis/c7f20f47-eed9-451b-8977-9af48b3e296e.json": [
+      "FND-00012",
+      "FND-00012",
+      "FND-00012",
+      "FND-00012",
+      "FND-00012"
+    ],
+    ".kaptaind/analysis/d2fec2d7-12dd-4f49-bda1-2a0e4461dd83.json": [
+      "FND-00013",
+      "FND-00013"
+    ],
+    ".kaptaind/ast_cache.json": [
+      "FND-00014"
+    ],
+    ".kaptaind/audit.jsonl": [
+      "FND-00015",
+      "FND-00015",
+      "FND-00015",
+      "FND-00015",
+      "FND-00015",
+      "FND-00015",
+      "FND-00015",
+      "FND-00015"
+    ],
+    ".kaptaind/daemon.out": [
+      "FND-00017",
+      "FND-00016",
+      "FND-00016"
+    ],
+    ".kaptaind/integration/20260910T203542Z-839a6d46-31f7-4fa5-ac75-289272f46f78.json": [
+      "FND-00018",
+      "FND-00018",
+      "FND-00018",
+      "FND-00019"
+    ],
+    ".kaptaind/integration/20260910T203542Z-ad129e39-65fa-486c-9a20-4159cb1cf7e6.json": [
+      "FND-00020",
+      "FND-00020",
+      "FND-00020",
+      "FND-00021"
+    ],
+    ".kaptaind/integration/20260910T203600Z-62232f9e-f6ea-47a0-9724-7d2773e3ee1f.json": [
+      "FND-00022",
+      "FND-00022",
+      "FND-00022",
+      "FND-00023"
+    ],
+    ".kaptaind/integration/20260910T203600Z-e73cfab5-14dc-4528-8ba0-cfab2e9c144c.json": [
+      "FND-00024",
+      "FND-00024",
+      "FND-00024",
+      "FND-00025"
+    ],
+    ".kaptaind/integration/20260910T203632Z-7808e54d-cbf5-4079-89ac-df94fd54e416.json": [
+      "FND-00026",
+      "FND-00026",
+      "FND-00026",
+      "FND-00027"
+    ],
+    ".kaptaind/integration/20260910T203632Z-919697cf-7d86-4df7-bdec-dc0bd987e711.json": [
+      "FND-00028",
+      "FND-00028",
+      "FND-00028",
+      "FND-00029"
+    ],
+    ".kaptaind/integration/20260910T203714Z-a4117ad6-82e4-44c4-bfb4-4961a86a62e9.json": [
+      "FND-00030",
+      "FND-00030",
+      "FND-00030",
+      "FND-00031"
+    ],
+    ".kaptaind/integration/20260910T203714Z-b16d1a8f-f167-4ef5-a10e-7e89b78b6c20.json": [
+      "FND-00032",
+      "FND-00032",
+      "FND-00032",
+      "FND-00033"
+    ],
+    ".kaptaind/integration/20260910T203724Z-1469ee01-3391-4cfa-97fd-cea3c870b81e.json": [
+      "FND-00034",
+      "FND-00034",
+      "FND-00034",
+      "FND-00035"
+    ],
+    ".kaptaind/integration/20260910T203724Z-dd25318e-9cc6-4240-a30c-501fa5f42931.json": [
+      "FND-00036",
+      "FND-00036",
+      "FND-00036",
+      "FND-00037"
+    ],
+    ".kaptaind/integration/20260910T203752Z-9e40b85f-aca5-4bf0-b50f-8b89e45aad41.json": [
+      "FND-00038",
+      "FND-00038",
+      "FND-00038",
+      "FND-00039"
+    ],
+    ".kaptaind/integration/20260910T203752Z-a5c75966-cc69-4b64-813f-6355ff83c798.json": [
+      "FND-00040",
+      "FND-00040",
+      "FND-00040",
+      "FND-00041"
+    ],
+    ".kaptaind/integration/20260910T203800Z-111742b7-216f-404b-b65b-4a73b2e61d6f.json": [
+      "FND-00042",
+      "FND-00042",
+      "FND-00042",
+      "FND-00043"
+    ],
+    ".kaptaind/integration/20260910T203800Z-1c95f47e-34d4-49fb-b9de-0dd32d0db222.json": [
+      "FND-00044",
+      "FND-00044",
+      "FND-00044",
+      "FND-00045"
+    ],
+    ".kaptaind/integration/20260910T203845Z-3e90c152-6c49-4424-ac5b-ab2e79544dbb.json": [
+      "FND-00046",
+      "FND-00046",
+      "FND-00046",
+      "FND-00047"
+    ],
+    ".kaptaind/integration/20260910T203845Z-687a4dd2-b6b9-4a1d-843a-cb91e0a3991f.json": [
+      "FND-00048",
+      "FND-00048",
+      "FND-00048",
+      "FND-00049"
+    ],
+    ".kaptaind/integration/20260910T203923Z-6deecd3f-6d6b-4543-a368-2bf43f152854.json": [
+      "FND-00050",
+      "FND-00050",
+      "FND-00050",
+      "FND-00051"
+    ],
+    ".kaptaind/integration/20260910T203923Z-c20796f5-b259-42ed-bef2-4befbcc39e67.json": [
+      "FND-00052",
+      "FND-00052",
+      "FND-00052",
+      "FND-00053"
+    ],
+    ".kaptaind/integration/20260911T023812Z-2b87a9d8-94a3-4bec-9c0e-9dfc8cc06292.json": [
+      "FND-00054",
+      "FND-00054",
+      "FND-00054",
+      "FND-00055",
+      "FND-00055",
+      "FND-00055",
+      "FND-00055",
+      "FND-00055",
+      "FND-00055",
+      "FND-00055",
+      "FND-00055"
+    ],
+    ".kaptaind/integration/20260911T023812Z-5415ad04-220b-4c9d-8e73-015f3b8e99a6.json": [
+      "FND-00056",
+      "FND-00056",
+      "FND-00056",
+      "FND-00057",
+      "FND-00057",
+      "FND-00057",
+      "FND-00057",
+      "FND-00057",
+      "FND-00057",
+      "FND-00057",
+      "FND-00057"
+    ],
+    ".kaptaind/integration/20260911T023831Z-9d8e2fef-db1a-4ed0-906c-7a37a6cb87b7.json": [
+      "FND-00058",
+      "FND-00058",
+      "FND-00058",
+      "FND-00059",
+      "FND-00059",
+      "FND-00059",
+      "FND-00059",
+      "FND-00059",
+      "FND-00059",
+      "FND-00059",
+      "FND-00059"
+    ],
+    ".kaptaind/integration/20260911T023831Z-c578de19-15be-47d0-9c65-c03b1ddc4f4b.json": [
+      "FND-00060",
+      "FND-00060",
+      "FND-00060",
+      "FND-00061",
+      "FND-00061",
+      "FND-00061",
+      "FND-00061",
+      "FND-00061",
+      "FND-00061",
+      "FND-00061",
+      "FND-00061"
+    ],
+    ".kaptaind/integration/20260911T024201Z-3cbd9d9c-908f-4869-9628-74f074348be5.json": [
+      "FND-00062",
+      "FND-00062",
+      "FND-00062",
+      "FND-00063",
+      "FND-00063",
+      "FND-00063",
+      "FND-00063",
+      "FND-00063",
+      "FND-00063",
+      "FND-00063",
+      "FND-00063"
+    ],
+    ".kaptaind/integration/20260911T024201Z-96362baa-e79e-4ecd-9761-2632297c1c26.json": [
+      "FND-00064",
+      "FND-00064",
+      "FND-00064",
+      "FND-00065",
+      "FND-00065",
+      "FND-00065",
+      "FND-00065",
+      "FND-00065",
+      "FND-00065",
+      "FND-00065",
+      "FND-00065"
+    ],
+    ".kaptaind/integration/20260911T024239Z-0d326235-97db-45d2-a299-55466a5f3b0d.json": [
+      "FND-00066",
+      "FND-00066",
+      "FND-00066",
+      "FND-00067",
+      "FND-00067",
+      "FND-00067",
+      "FND-00067",
+      "FND-00067",
+      "FND-00067",
+      "FND-00067",
+      "FND-00067"
+    ],
+    ".kaptaind/integration/20260911T024239Z-ea88386a-8df4-475c-9b9f-6147c287ba87.json": [
+      "FND-00068",
+      "FND-00068",
+      "FND-00068",
+      "FND-00069",
+      "FND-00069",
+      "FND-00069",
+      "FND-00069",
+      "FND-00069",
+      "FND-00069",
+      "FND-00069",
+      "FND-00069"
+    ],
+    ".kaptaind/integration/20260911T024312Z-749914b2-2ecc-4e72-a312-c0cdfd77f4ec.json": [
+      "FND-00070",
+      "FND-00070",
+      "FND-00070",
+      "FND-00071",
+      "FND-00071",
+      "FND-00071",
+      "FND-00071",
+      "FND-00071",
+      "FND-00071",
+      "FND-00071",
+      "FND-00071"
+    ],
+    ".kaptaind/integration/20260911T024312Z-9d96ac86-6f88-4908-a4fa-ec28c8998a31.json": [
+      "FND-00072",
+      "FND-00072",
+      "FND-00072",
+      "FND-00073",
+      "FND-00073",
+      "FND-00073",
+      "FND-00073",
+      "FND-00073",
+      "FND-00073",
+      "FND-00073",
+      "FND-00073"
+    ],
+    ".kaptaind/integration/20260911T024341Z-acb763f0-f3b4-4bb2-8143-bc837b782192.json": [
+      "FND-00074",
+      "FND-00074",
+      "FND-00074",
+      "FND-00075",
+      "FND-00075",
+      "FND-00075",
+      "FND-00075",
+      "FND-00075",
+      "FND-00075",
+      "FND-00075",
+      "FND-00075"
+    ],
+    ".kaptaind/integration/20260911T024341Z-f6e9b453-cec7-4e32-b759-bf8149dd72e5.json": [
+      "FND-00076",
+      "FND-00076",
+      "FND-00076",
+      "FND-00077",
+      "FND-00077",
+      "FND-00077",
+      "FND-00077",
+      "FND-00077",
+      "FND-00077",
+      "FND-00077",
+      "FND-00077"
+    ],
+    ".kaptaind/integration/20260911T024409Z-2dbf1f0d-f879-401e-af35-4c26e93ac695.json": [
+      "FND-00078",
+      "FND-00078",
+      "FND-00078",
+      "FND-00079",
+      "FND-00079",
+      "FND-00079",
+      "FND-00079",
+      "FND-00079",
+      "FND-00079",
+      "FND-00079",
+      "FND-00079"
+    ],
+    ".kaptaind/integration/20260911T024409Z-e3931441-8dfd-41cf-9924-dd70e6baf078.json": [
+      "FND-00080",
+      "FND-00080",
+      "FND-00080",
+      "FND-00081",
+      "FND-00081",
+      "FND-00081",
+      "FND-00081",
+      "FND-00081",
+      "FND-00081",
+      "FND-00081",
+      "FND-00081"
+    ],
+    ".kaptaind/integration/20260911T024614Z-df4ff2e3-1db3-401f-8bf9-05b594d407c9.json": [
+      "FND-00082",
+      "FND-00082",
+      "FND-00082",
+      "FND-00083",
+      "FND-00083",
+      "FND-00083",
+      "FND-00083",
+      "FND-00083",
+      "FND-00083",
+      "FND-00083",
+      "FND-00083"
+    ],
+    ".kaptaind/integration/20260911T024615Z-7199512b-7798-4a58-aaea-617fc9657cbc.json": [
+      "FND-00084",
+      "FND-00084",
+      "FND-00084",
+      "FND-00085",
+      "FND-00085",
+      "FND-00085",
+      "FND-00085",
+      "FND-00085",
+      "FND-00085",
+      "FND-00085",
+      "FND-00085"
+    ],
+    ".kaptaind/integration/20260911T024953Z-3c22a357-4aee-4690-917c-125e154c288c.json": [
+      "FND-00086",
+      "FND-00086",
+      "FND-00086",
+      "FND-00087",
+      "FND-00087",
+      "FND-00087",
+      "FND-00087",
+      "FND-00087",
+      "FND-00087",
+      "FND-00087",
+      "FND-00087"
+    ],
+    ".kaptaind/integration/20260911T024953Z-f2b1ba50-7e7d-465e-990b-f2b000da3bce.json": [
+      "FND-00088",
+      "FND-00088",
+      "FND-00088",
+      "FND-00089",
+      "FND-00089",
+      "FND-00089",
+      "FND-00089",
+      "FND-00089",
+      "FND-00089",
+      "FND-00089",
+      "FND-00089"
+    ],
+    ".kaptaind/integration/20260911T025039Z-c75906df-b282-43ef-97b4-2f504d42123a.json": [
+      "FND-00090",
+      "FND-00090",
+      "FND-00090",
+      "FND-00091",
+      "FND-00091",
+      "FND-00091",
+      "FND-00091",
+      "FND-00091",
+      "FND-00091",
+      "FND-00091",
+      "FND-00091"
+    ],
+    ".kaptaind/integration/20260911T025040Z-9dcb25ec-6bd4-46b7-84a2-c2833624fece.json": [
+      "FND-00092",
+      "FND-00092",
+      "FND-00092",
+      "FND-00093",
+      "FND-00093",
+      "FND-00093",
+      "FND-00093",
+      "FND-00093",
+      "FND-00093",
+      "FND-00093",
+      "FND-00093"
+    ],
+    ".kaptaind/integration/20260911T025054Z-26cbf657-aeb3-4d27-831b-7aac0fa2a4e3.json": [
+      "FND-00094",
+      "FND-00094",
+      "FND-00094",
+      "FND-00095",
+      "FND-00095",
+      "FND-00095",
+      "FND-00095",
+      "FND-00095",
+      "FND-00095",
+      "FND-00095",
+      "FND-00095"
+    ],
+    ".kaptaind/integration/20260911T025054Z-99addf5b-4647-49f3-9473-f6e8e7660d1a.json": [
+      "FND-00096",
+      "FND-00096",
+      "FND-00096",
+      "FND-00097",
+      "FND-00097",
+      "FND-00097",
+      "FND-00097",
+      "FND-00097",
+      "FND-00097",
+      "FND-00097",
+      "FND-00097"
+    ],
+    ".kaptaind/integration/20260911T025117Z-6630ed40-cfb6-4460-8fbb-8cb36fef890d.json": [
+      "FND-00098",
+      "FND-00098",
+      "FND-00098",
+      "FND-00099",
+      "FND-00099",
+      "FND-00099",
+      "FND-00099",
+      "FND-00099",
+      "FND-00099",
+      "FND-00099",
+      "FND-00099"
+    ],
+    ".kaptaind/integration/20260911T025117Z-90ac0ec9-8b8c-4493-a08e-125af3b456ec.json": [
+      "FND-00100",
+      "FND-00100",
+      "FND-00100",
+      "FND-00101",
+      "FND-00101",
+      "FND-00101",
+      "FND-00101",
+      "FND-00101",
+      "FND-00101",
+      "FND-00101",
+      "FND-00101"
+    ],
+    ".kaptaind/integration/20260911T025501Z-24559ce8-010e-4060-88e6-03c0e451f3de.json": [
+      "FND-00102",
+      "FND-00102",
+      "FND-00102",
+      "FND-00103",
+      "FND-00103",
+      "FND-00103",
+      "FND-00103",
+      "FND-00103",
+      "FND-00103",
+      "FND-00103",
+      "FND-00103"
+    ],
+    ".kaptaind/integration/20260911T025501Z-f038b5b8-b4a2-48dc-8946-c816f1a4edd2.json": [
+      "FND-00104",
+      "FND-00104",
+      "FND-00104",
+      "FND-00105",
+      "FND-00105",
+      "FND-00105",
+      "FND-00105",
+      "FND-00105",
+      "FND-00105",
+      "FND-00105",
+      "FND-00105"
+    ],
+    ".kaptaind/integration/20260911T025516Z-4beb57ce-89c7-4e72-adbc-b242c7e9ab96.json": [
+      "FND-00106",
+      "FND-00106",
+      "FND-00106",
+      "FND-00107",
+      "FND-00107",
+      "FND-00107",
+      "FND-00107",
+      "FND-00107",
+      "FND-00107",
+      "FND-00107",
+      "FND-00107"
+    ],
+    ".kaptaind/integration/20260911T025516Z-5cfa8054-4185-4c40-9eb4-65922fac9da8.json": [
+      "FND-00108",
+      "FND-00108",
+      "FND-00108",
+      "FND-00109",
+      "FND-00109",
+      "FND-00109",
+      "FND-00109",
+      "FND-00109",
+      "FND-00109",
+      "FND-00109",
+      "FND-00109"
+    ],
+    ".kaptaind/integration/20260911T025537Z-409e73b7-9bd8-4a09-aefe-f3e25656c4c7.json": [
+      "FND-00110",
+      "FND-00110",
+      "FND-00110",
+      "FND-00111",
+      "FND-00111",
+      "FND-00111",
+      "FND-00111",
+      "FND-00111",
+      "FND-00111",
+      "FND-00111",
+      "FND-00111"
+    ],
+    ".kaptaind/integration/20260911T025538Z-16a6f870-23c2-4757-9ced-36f390d01ae7.json": [
+      "FND-00112",
+      "FND-00112",
+      "FND-00112",
+      "FND-00113",
+      "FND-00113",
+      "FND-00113",
+      "FND-00113",
+      "FND-00113",
+      "FND-00113",
+      "FND-00113",
+      "FND-00113"
+    ],
+    ".kaptaind/integration/20260911T030025Z-ca6281a4-cfc2-41fd-aa4f-32f107b427d8.json": [
+      "FND-00114",
+      "FND-00114",
+      "FND-00114",
+      "FND-00115",
+      "FND-00115",
+      "FND-00115",
+      "FND-00115",
+      "FND-00115",
+      "FND-00115",
+      "FND-00115",
+      "FND-00115"
+    ],
+    ".kaptaind/integration/20260911T030025Z-ef305233-ec16-4400-baa9-d2b847d637d3.json": [
+      "FND-00116",
+      "FND-00116",
+      "FND-00116",
+      "FND-00117",
+      "FND-00117",
+      "FND-00117",
+      "FND-00117",
+      "FND-00117",
+      "FND-00117",
+      "FND-00117",
+      "FND-00117"
+    ],
+    ".kaptaind/integration/20260911T030052Z-635f76f9-5236-4923-9978-845fdeaf4289.json": [
+      "FND-00118",
+      "FND-00118",
+      "FND-00118",
+      "FND-00119",
+      "FND-00119",
+      "FND-00119",
+      "FND-00119",
+      "FND-00119",
+      "FND-00119",
+      "FND-00119",
+      "FND-00119"
+    ],
+    ".kaptaind/integration/20260911T030052Z-a3388f84-6f1f-47e4-96b5-45e23bad1cce.json": [
+      "FND-00120",
+      "FND-00120",
+      "FND-00120",
+      "FND-00121",
+      "FND-00121",
+      "FND-00121",
+      "FND-00121",
+      "FND-00121",
+      "FND-00121",
+      "FND-00121",
+      "FND-00121"
+    ],
+    ".kaptaind/integration/20260911T030120Z-830c2b1f-58ed-492a-a44a-614630220495.json": [
+      "FND-00122",
+      "FND-00122",
+      "FND-00122",
+      "FND-00123",
+      "FND-00123",
+      "FND-00123",
+      "FND-00123",
+      "FND-00123",
+      "FND-00123",
+      "FND-00123",
+      "FND-00123"
+    ],
+    ".kaptaind/integration/20260911T030120Z-fd51ea13-c81e-477a-8e8e-b983c51da132.json": [
+      "FND-00124",
+      "FND-00124",
+      "FND-00124",
+      "FND-00125",
+      "FND-00125",
+      "FND-00125",
+      "FND-00125",
+      "FND-00125",
+      "FND-00125",
+      "FND-00125",
+      "FND-00125"
+    ],
+    ".kaptaind/integration/20260911T030144Z-0776d71c-09c2-403f-a638-8f6e1e214b38.json": [
+      "FND-00126",
+      "FND-00126",
+      "FND-00126",
+      "FND-00127",
+      "FND-00127",
+      "FND-00127",
+      "FND-00127",
+      "FND-00127",
+      "FND-00127",
+      "FND-00127",
+      "FND-00127"
+    ],
+    ".kaptaind/integration/20260911T030144Z-e15c26b7-52f6-4e26-ae67-1db904aa4f1d.json": [
+      "FND-00128",
+      "FND-00128",
+      "FND-00128",
+      "FND-00129",
+      "FND-00129",
+      "FND-00129",
+      "FND-00129",
+      "FND-00129",
+      "FND-00129",
+      "FND-00129",
+      "FND-00129"
+    ],
+    ".kaptaind/integration/20260911T030202Z-5ffecb5a-9bd2-4dfa-b59b-71e16597eba6.json": [
+      "FND-00130",
+      "FND-00130",
+      "FND-00130",
+      "FND-00131",
+      "FND-00131",
+      "FND-00131",
+      "FND-00131",
+      "FND-00131",
+      "FND-00131",
+      "FND-00131",
+      "FND-00131"
+    ],
+    ".kaptaind/integration/20260911T030202Z-9f47e31b-50a4-4f5b-a086-4339485ad6f3.json": [
+      "FND-00132",
+      "FND-00132",
+      "FND-00132",
+      "FND-00133",
+      "FND-00133",
+      "FND-00133",
+      "FND-00133",
+      "FND-00133",
+      "FND-00133",
+      "FND-00133",
+      "FND-00133"
+    ],
+    ".kaptaind/integration/20260911T030229Z-ea04f5d4-9e32-4f79-9f24-0fbb3d01045f.json": [
+      "FND-00134",
+      "FND-00134",
+      "FND-00134",
+      "FND-00135",
+      "FND-00135",
+      "FND-00135",
+      "FND-00135",
+      "FND-00135",
+      "FND-00135",
+      "FND-00135",
+      "FND-00135"
+    ],
+    ".kaptaind/integration/20260911T030229Z-f07254c2-3f94-44e6-9442-2fe68617d8d8.json": [
+      "FND-00136",
+      "FND-00136",
+      "FND-00136",
+      "FND-00137",
+      "FND-00137",
+      "FND-00137",
+      "FND-00137",
+      "FND-00137",
+      "FND-00137",
+      "FND-00137",
+      "FND-00137"
+    ],
+    ".kaptaind/integration/20260911T030314Z-63cab6ce-2ea0-492b-9bc8-261f184f7540.json": [
+      "FND-00138",
+      "FND-00138",
+      "FND-00138",
+      "FND-00139",
+      "FND-00139",
+      "FND-00139",
+      "FND-00139",
+      "FND-00139",
+      "FND-00139",
+      "FND-00139",
+      "FND-00139"
+    ],
+    ".kaptaind/integration/20260911T030314Z-8e35a6b5-25ce-493f-bc74-aa5f11860852.json": [
+      "FND-00140",
+      "FND-00140",
+      "FND-00140",
+      "FND-00141",
+      "FND-00141",
+      "FND-00141",
+      "FND-00141",
+      "FND-00141",
+      "FND-00141",
+      "FND-00141",
+      "FND-00141"
+    ],
+    ".kaptaind/integration/20260911T030801Z-77b0ee92-de7d-42f8-b24b-bdb192649506.json": [
+      "FND-00142",
+      "FND-00142",
+      "FND-00142",
+      "FND-00143",
+      "FND-00143",
+      "FND-00143",
+      "FND-00143",
+      "FND-00143",
+      "FND-00143",
+      "FND-00143",
+      "FND-00143"
+    ],
+    ".kaptaind/integration/20260911T030801Z-d0689d07-6047-40bb-bbf9-71574f4ab69d.json": [
+      "FND-00144",
+      "FND-00144",
+      "FND-00144",
+      "FND-00145",
+      "FND-00145",
+      "FND-00145",
+      "FND-00145",
+      "FND-00145",
+      "FND-00145",
+      "FND-00145",
+      "FND-00145"
+    ],
+    ".kaptaind/integration/20260911T031115Z-784bf63d-ecf0-4c23-9f9d-c1b1d8e82e2b.json": [
+      "FND-00146",
+      "FND-00146",
+      "FND-00146",
+      "FND-00147",
+      "FND-00147",
+      "FND-00147",
+      "FND-00147",
+      "FND-00147",
+      "FND-00147",
+      "FND-00147",
+      "FND-00147"
+    ],
+    ".kaptaind/integration/20260911T031115Z-abf5b005-2c1a-4049-a30a-3ce55f6c862b.json": [
+      "FND-00148",
+      "FND-00148",
+      "FND-00148",
+      "FND-00149",
+      "FND-00149",
+      "FND-00149",
+      "FND-00149",
+      "FND-00149",
+      "FND-00149",
+      "FND-00149",
+      "FND-00149"
+    ],
+    ".kaptaind/integration/20260911T233104Z-1507303b-0eec-423d-ae20-56f2a9dcfcf1.json": [
+      "FND-00150",
+      "FND-00150",
+      "FND-00150",
+      "FND-00151",
+      "FND-00151",
+      "FND-00151",
+      "FND-00151",
+      "FND-00151",
+      "FND-00151",
+      "FND-00151"
+    ],
+    ".kaptaind/integration/20260911T233104Z-4ef6c812-86dd-41a4-8192-94412fc52d30.json": [
+      "FND-00152",
+      "FND-00152",
+      "FND-00152",
+      "FND-00153",
+      "FND-00153",
+      "FND-00153",
+      "FND-00153",
+      "FND-00153",
+      "FND-00153",
+      "FND-00153"
+    ],
+    ".kaptainignore": [
+      "FND-00154",
+      "FND-00154"
+    ],
+    ".lwoodz/manifest.json": [
+      "FND-00155",
+      "FND-00155",
+      "FND-00155"
+    ],
+    ".uni/snapshot-v1.json": [
+      "FND-00163",
+      "FND-00163",
+      "FND-00164",
+      "FND-00164",
+      "FND-00164",
+      "FND-00156",
+      "FND-00156",
+      "FND-00156",
+      "FND-00156",
+      "FND-00156",
+      "FND-00156",
+      "FND-00156",
+      "FND-00156",
+      "FND-00158",
+      "FND-00159",
+      "FND-00160",
+      "FND-00165",
+      "FND-00166",
+      "FND-00157",
+      "FND-00157",
+      "FND-00157",
+      "FND-00157",
+      "FND-00157",
+      "FND-00157",
+      "FND-00157",
+      "FND-00157",
+      "FND-00167",
+      "FND-00161",
+      "FND-00162",
+      "FND-00162",
+      "FND-00162",
+      "FND-00162",
+      "FND-00162",
+      "FND-00162",
+      "FND-00162",
+      "FND-00162"
+    ],
+    "ARCHITECTURE.md": [
+      "FND-00169",
+      "FND-00169",
+      "FND-00168"
+    ],
+    "COPYRIGHT": [
+      "FND-00170"
+    ],
+    "Cargo.lock": [
+      "FND-00172",
+      "FND-00172",
+      "FND-00172",
+      "FND-00171",
+      "FND-00171",
+      "FND-00171"
+    ],
+    "Cargo.toml": [
+      "FND-00173"
+    ],
+    "README.md": [
+      "FND-00174"
+    ],
+    "THIRD_PARTY_NOTICES": [
+      "FND-00175"
+    ],
+    "crates/azusa-cli/Cargo.toml": [
+      "FND-00176"
+    ],
+    "crates/azusa-cli/tests/cli.rs": [
+      "FND-00177",
+      "FND-00177",
+      "FND-00177",
+      "FND-00177",
+      "FND-00177",
+      "FND-00177",
+      "FND-00177",
+      "FND-00177"
+    ],
+    "crates/azusa-core/Cargo.toml": [
+      "FND-00178",
+      "FND-00178"
+    ],
+    "crates/azusa-core/src/engine.rs": [
+      "FND-00179"
+    ],
+    "crates/azusa-core/src/error.rs": [
+      "FND-00180"
+    ],
+    "crates/azusa-core/src/resolve.rs": [
+      "FND-00181",
+      "FND-00181"
+    ],
+    "crates/azusa-diff/src/fileset.rs": [
+      "FND-00182",
+      "FND-00182"
+    ],
+    "crates/azusa-fs/src/walk.rs": [
+      "FND-00187",
+      "FND-00183",
+      "FND-00184",
+      "FND-00184",
+      "FND-00185",
+      "FND-00186",
+      "FND-00186"
+    ],
+    "crates/azusa-git/Cargo.toml": [
+      "FND-00188"
+    ],
+    "crates/azusa-git/src/error.rs": [
+      "FND-00189",
+      "FND-00189",
+      "FND-00189"
+    ],
+    "crates/azusa-git/src/lib.rs": [
+      "FND-00190"
+    ],
+    "crates/azusa-git/src/provider.rs": [
+      "FND-00191",
+      "FND-00191",
+      "FND-00191"
+    ],
+    "crates/azusa-git/src/testutil.rs": [
+      "FND-00192"
+    ],
+    "crates/azusa-graph/src/lib.rs": [
+      "FND-00193",
+      "FND-00193"
+    ],
+    "crates/azusa-graph/src/manifest.rs": [
+      "FND-00194"
+    ],
+    "crates/azusa-model/src/lib.rs": [
+      "FND-00195",
+      "FND-00195"
+    ],
+    "crates/azusa-model/src/state.rs": [
+      "FND-00196"
+    ],
+    "crates/azusa-policy/src/lib.rs": [
+      "FND-00197"
+    ],
+    "docs/uni-2026-09-11-m1.md": [
+      "FND-00198"
+    ],
+    "kaptaind.toml": [
+      "FND-00199"
+    ],
+    "lwoodz.toml": [
+      "FND-00200"
+    ],
+    "traci.toml": [
+      "FND-00201"
+    ]
+  },
+  "source_platform": "linux",
+  "target": "windows"
+}

@@ -19,3 +19,7 @@ repository states. See `README.md` and `ARCHITECTURE.md`.
   deterministic analysis path.
 - Never silently execute destructive Git operations (force push, hard reset,
   branch deletion, history rewriting). Azusa plans; Kaptaind executes.
+
+## TempCheq
+
+- Submit every artifact containing LLM inference calls to tempcheq before delivery: run `tempcheq <path>` on the workspace that produced the artifact, review the temperature audit, and include the findings with the artifact (`tempcheq --report` for JSON output, `tempcheq report <path>` for Markdown/HTML report files).

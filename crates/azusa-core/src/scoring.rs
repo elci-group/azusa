@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The azusa Authors
+// SPDX-License-Identifier: MIT
+
 //! Deterministic layer scoring.
 //!
 //! Every layer score comes from a fixed saturating curve
@@ -6,7 +9,7 @@
 //! time or environment. Constants are documented per layer and tested.
 
 use azusa_diff::FilesetDiff;
-use azusa_model::{Ancestry, DriftScore, Layer};
+use azusa_model::{Ancestry, DriftDirection, DriftScore, Layer, Severity};
 
 /// Saturating score: 0 for no change, approaching 10 as `count` grows.
 #[must_use]
@@ -15,6 +18,33 @@ pub fn saturating(count: f32, k: f32) -> f32 {
         0.0
     } else {
         10.0 * count / (count + k)
+    }
+}
+
+/// Severity for facet items present only on one side (L6 interfaces, L9
+/// operations).
+///
+/// The *breaking* case is items on the side that reconciliation would
+/// overwrite (the side behind the drift source): those items vanish from
+/// the surface. Items on the drift source's side are growth. When both
+/// sides evolved (bidirectional), either could be the casualty, so both
+/// rate Medium.
+#[must_use]
+pub fn side_severity(side_a: bool, direction: DriftDirection, count: usize) -> Severity {
+    let breaking = match direction {
+        DriftDirection::AToB => !side_a,
+        DriftDirection::BToA => side_a,
+        DriftDirection::Bidirectional => true,
+        _ => false,
+    };
+    if breaking {
+        if count >= 5 {
+            Severity::High
+        } else {
+            Severity::Medium
+        }
+    } else {
+        Severity::Low
     }
 }
 

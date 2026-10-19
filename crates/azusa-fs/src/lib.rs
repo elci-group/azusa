@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The azusa Authors
+// SPDX-License-Identifier: MIT
+
 //! Azusa filesystem state provider.
 //!
 //! Snapshots plain directories (generated repositories, extracted archives,
@@ -111,6 +114,7 @@ impl FsProvider {
             structure: StructureState::default(),
             dependencies: DependencyState::default(),
             configuration: ConfigurationState::default(),
+            operations: azusa_model::OperationalState::default(),
             behaviour: None,
             captured_text,
         })

@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The azusa Authors
+// SPDX-License-Identifier: MIT
+
 //! Structural comparison layers (L3–L5).
 //!
 //! Compares enriched facets of two states: module topology (L3),
@@ -14,6 +17,9 @@ use azusa_model::{
 
 use crate::engine::Draft;
 use crate::scoring::{round2, saturating};
+
+/// Cap on evidence reference paths listed per observation.
+const MAX_EVIDENCE_PATHS: usize = 8;
 
 /// A dependency version change classification.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -502,6 +508,135 @@ pub(crate) fn compare_configuration(
     LayerOutcome {
         drafts,
         score: round2(saturating(score_count, 6.0)),
+    }
+}
+
+/// L9: operations — the deployment/service surface.
+///
+/// Operational units are the deployment-facing subset of configuration
+/// (CI workflows, containers, kubernetes manifests, service units,
+/// compose stacks). Framing is topology: units present on only one side
+/// or reconfigured between states; severity follows the drift direction
+/// via [`crate::scoring::side_severity`].
+#[must_use]
+#[allow(clippy::too_many_lines)]
+pub(crate) fn compare_operations(
+    a: &azusa_model::RepositoryState,
+    b: &azusa_model::RepositoryState,
+    direction: azusa_model::DriftDirection,
+) -> LayerOutcome {
+    let mut drafts = Vec::new();
+    if a.operations.units.is_empty() && b.operations.units.is_empty() {
+        return LayerOutcome { drafts, score: 0.0 };
+    }
+
+    let units_a: BTreeMap<&str, &azusa_model::OperationalUnit> = a
+        .operations
+        .units
+        .iter()
+        .map(|unit| (unit.path.as_str(), unit))
+        .collect();
+    let units_b: BTreeMap<&str, &azusa_model::OperationalUnit> = b
+        .operations
+        .units
+        .iter()
+        .map(|unit| (unit.path.as_str(), unit))
+        .collect();
+
+    let removed: Vec<String> = units_a
+        .keys()
+        .copied()
+        .filter(|path| !units_b.contains_key(*path))
+        .map(|path| format!("{} ({})", path, units_a[path].kind.as_str()))
+        .collect();
+    let added: Vec<String> = units_b
+        .keys()
+        .copied()
+        .filter(|path| !units_a.contains_key(*path))
+        .map(|path| format!("{} ({})", path, units_b[path].kind.as_str()))
+        .collect();
+    let reconfigured: Vec<String> = units_a
+        .iter()
+        .filter_map(|(path, unit)| {
+            units_b.get(path).and_then(|other| {
+                (other.digest != unit.digest || other.kind != unit.kind)
+                    .then(|| format!("{} ({})", path, other.kind.as_str()))
+            })
+        })
+        .collect();
+
+    // Score: removals and reconfigurations weigh 2 (operational risk),
+    // additions 1.5. k = 5: one reconfigured service ≈ 2.9, three ≈ 5.5.
+    let count =
+        2.0 * (removed.len() + reconfigured.len()) as f32 + 1.5 * added.len() as f32;
+
+    if !removed.is_empty() {
+        drafts.push(Draft {
+            category: Layer::Operational,
+            severity: crate::scoring::side_severity(true, direction, removed.len()),
+            confidence: 1.0,
+            title: format!(
+                "{} operational unit(s) present only in {}",
+                removed.len(),
+                a.identity.label
+            ),
+            detail: "deployment or service definitions exist on this side that the other state lacks; reconciling toward the other state drops them from the deployment surface"
+                .to_owned(),
+            side: Side::A,
+            evidence: vec![Evidence {
+                kind: EvidenceKind::Config,
+                description: "operational units absent from the second state".to_owned(),
+                references: removed.into_iter().take(MAX_EVIDENCE_PATHS).collect(),
+            }],
+        });
+    }
+    if !reconfigured.is_empty() {
+        drafts.push(Draft {
+            category: Layer::Operational,
+            severity: if reconfigured.len() >= 3 {
+                Severity::High
+            } else {
+                Severity::Medium
+            },
+            confidence: 1.0,
+            title: format!(
+                "{} operational unit(s) reconfigured",
+                reconfigured.len()
+            ),
+            detail: "deployment or service definitions changed content; running infrastructure may diverge from the repository"
+                .to_owned(),
+            side: Side::Both,
+            evidence: vec![Evidence {
+                kind: EvidenceKind::Config,
+                description: "reconfigured operational units".to_owned(),
+                references: reconfigured.into_iter().take(MAX_EVIDENCE_PATHS).collect(),
+            }],
+        });
+    }
+    if !added.is_empty() {
+        drafts.push(Draft {
+            category: Layer::Operational,
+            severity: crate::scoring::side_severity(false, direction, added.len()),
+            confidence: 1.0,
+            title: format!(
+                "{} operational unit(s) present only in {}",
+                added.len(),
+                b.identity.label
+            ),
+            detail: "deployment or service definitions exist on this side that the other state lacks; reconciling toward the other state drops them from the deployment surface"
+                .to_owned(),
+            side: Side::B,
+            evidence: vec![Evidence {
+                kind: EvidenceKind::Config,
+                description: "operational units absent from the first state".to_owned(),
+                references: added.into_iter().take(MAX_EVIDENCE_PATHS).collect(),
+            }],
+        });
+    }
+
+    LayerOutcome {
+        drafts,
+        score: round2(saturating(count, 5.0)),
     }
 }
 

@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The azusa Authors
+// SPDX-License-Identifier: MIT
+
 //! Azusa structural analysis.
 //!
 //! Derives structure, dependency and configuration facets from a captured
@@ -6,17 +9,19 @@
 //! interest. A pure function of the state — no I/O — which keeps the
 //! analysis deterministic and testable.
 
+pub mod behaviour;
 pub mod config_files;
 pub mod manifest;
 
+pub use behaviour::behaviour_of;
 pub use config_files::classify;
 pub use manifest::{parse_lockfile, parse_manifest};
 
 use std::collections::BTreeSet;
 
 use azusa_model::{
-    ConfigurationFile, ConfigurationState, DependencyState, LockfileInfo, RepositoryState,
-    StructureState,
+    ConfigurationFile, ConfigurationState, DependencyState, LockfileInfo, OperationalState,
+    OperationalUnit, RepositoryState, StructureState,
 };
 
 use crate::manifest::{lockfile_versions, modules_of, resolve_dependencies};
@@ -99,7 +104,27 @@ pub fn enrich(mut state: RepositoryState) -> RepositoryState {
             })
         })
         .collect();
-    state.configuration = ConfigurationState { files };
+    state.configuration = ConfigurationState {
+        files: files.clone(),
+    };
+
+    // L9 operations: the deployment/service subset of the configuration
+    // facet, framed as operational units.
+    state.operations = OperationalState {
+        units: files
+            .iter()
+            .filter(|file| file.kind.is_operational())
+            .map(|file| OperationalUnit {
+                path: file.path.clone(),
+                kind: file.kind,
+                digest: file.digest.clone(),
+            })
+            .collect(),
+    };
+
+    // L6–L7 inputs: the behavioural surface (tests, entry points, build
+    // scripts, public items).
+    state.behaviour = Some(behaviour::behaviour_of(&state));
 
     state
 }
@@ -200,5 +225,44 @@ mod tests {
         assert_eq!(once.structure, twice.structure);
         assert_eq!(once.dependencies, twice.dependencies);
         assert_eq!(once.configuration, twice.configuration);
+        assert_eq!(once.behaviour, twice.behaviour);
+    }
+
+    #[test]
+    fn enrich_fills_behaviour_facet() {
+        let state = enrich(workspace_state());
+        let behaviour = state.behaviour.expect("behaviour facet");
+        assert!(behaviour.entry_points.contains(&"crates/b/src/main.rs".to_owned()));
+        assert_eq!(
+            behaviour.public_items_per_file.get("crates/a/src/lib.rs"),
+            Some(&1)
+        );
+    }
+
+    #[test]
+    fn enrich_fills_operations_facet_from_deploy_configs() {
+        let mut state = workspace_state();
+        let manifest = "apiVersion: v1\nkind: Service\n";
+        state
+            .filesystem
+            .files
+            .insert("k8s/api.yaml".to_owned(), entry(manifest));
+        state
+            .captured_text
+            .insert("k8s/api.yaml".to_owned(), manifest.to_owned());
+        state
+            .filesystem
+            .files
+            .insert("README.md".to_owned(), entry("docs\n"));
+
+        let state = enrich(state);
+        let units = &state.operations.units;
+        let paths: Vec<&str> = units.iter().map(|unit| unit.path.as_str()).collect();
+        assert!(paths.contains(&".github/workflows/ci.yml"));
+        assert!(paths.contains(&"k8s/api.yaml"));
+        assert!(!paths.contains(&"Cargo.toml"), "manifests are not operational");
+        assert!(!paths.contains(&"README.md"));
+        let k8s = units.iter().find(|u| u.path == "k8s/api.yaml").expect("unit");
+        assert_eq!(k8s.kind, ConfigurationKind::Kubernetes);
     }
 }

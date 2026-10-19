@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The azusa Authors
+// SPDX-License-Identifier: MIT
+
 //! Incremental hash cache.
 //!
 //! Re-hashing an unchanged repository is the dominant cost of repeated drift

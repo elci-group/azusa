@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The azusa Authors
+// SPDX-License-Identifier: MIT
+
 //! Azusa CLI — repository drift intelligence.
 //!
 //! Measures, classifies, explains and plans reconciliation of drift between
@@ -59,6 +62,48 @@ enum Command {
         /// State selectors, as for `drift`.
         specs: Vec<String>,
     },
+
+    /// CI gate: drift analysis plus policy enforcement (exit 3 on violation).
+    Policy {
+        /// The policy subcommand.
+        #[command(subcommand)]
+        action: PolicyAction,
+    },
+
+    /// Write a canonical drift-report artefact under `.azusa/exports/`.
+    Export {
+        /// State selectors, as for `drift`.
+        specs: Vec<String>,
+    },
+
+    /// Generate a reconciliation plan (steps + safety gates) and export it
+    /// under `.azusa/exports/`. Azusa plans; Kaptaind executes.
+    Plan {
+        /// State selectors, as for `drift`.
+        specs: Vec<String>,
+    },
+
+    /// Continuous drift watch: quick stat-only checks with staged
+    /// escalation to full analysis (and a reconciliation plan at stage 2).
+    Watch {
+        /// Seconds between quick checks.
+        #[arg(long, default_value_t = 5)]
+        interval: u64,
+
+        /// Stop after this many cycles (0 = run until interrupted).
+        #[arg(long, default_value_t = 0)]
+        max_cycles: u64,
+    },
+}
+
+#[derive(Debug, Subcommand)]
+enum PolicyAction {
+    /// Check the working tree (or given states) against the configured
+    /// policy.
+    Check {
+        /// State selectors, as for `drift`.
+        specs: Vec<String>,
+    },
 }
 
 /// Errors that map onto exit codes.
@@ -109,6 +154,15 @@ fn main() -> std::process::ExitCode {
         Command::Drift { specs } => commands::drift(&specs, &config, &cli.output),
         Command::Score { specs } => commands::score(&specs, &config, &cli.output),
         Command::Explain { specs } => commands::explain(&specs, &config, &cli.output),
+        Command::Policy { action } => match action {
+            PolicyAction::Check { specs } => commands::policy(&specs, &config, &cli.output),
+        },
+        Command::Export { specs } => commands::export(&specs, &config, &cli.output),
+        Command::Plan { specs } => commands::plan(&specs, &config, &cli.output),
+        Command::Watch {
+            interval,
+            max_cycles,
+        } => commands::watch(interval, max_cycles, &config, &cli.output),
     };
 
     match code {

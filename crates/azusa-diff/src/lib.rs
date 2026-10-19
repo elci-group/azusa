@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The azusa Authors
+// SPDX-License-Identifier: MIT
+
 //! Azusa comparison primitives.
 //!
 //! Deterministic fileset comparison over two

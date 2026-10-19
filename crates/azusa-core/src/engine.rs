@@ -1,10 +1,13 @@
+// Copyright (c) 2026 The azusa Authors
+// SPDX-License-Identifier: MIT
+
 //! The comparison engine.
 //!
 //! [`compare`] takes two captured [`RepositoryState`]s and produces an
 //! evidence-first [`DriftReport`]. The engine is a pure function of its
 //! inputs plus [`AzusaConfig`]: identical states, configuration and tool
-//! version always produce identical reports (L0–L2 in this milestone;
-//! structural layers arrive with phase 2).
+//! version always produce identical reports (layers L0–L7; L8 semantics
+//! and L9 operations are planned).
 
 use azusa_diff::FilesetDiff;
 use azusa_model::{
@@ -135,10 +138,18 @@ pub fn compare(
     let structure_outcome = crate::structural::compare_structure(a_name, a, b_name, b);
     let dependency_outcome = crate::structural::compare_dependencies(a_name, a, b_name, b);
     let configuration_outcome = crate::structural::compare_configuration(a, b);
+    // L9 operational layer over the enriched operations facet.
+    let operational_outcome = crate::structural::compare_operations(a, b, direction);
+    // L6–L7 behavioural layers over the enriched behaviour facet.
+    let interface_outcome = crate::behaviour::compare_interfaces(a, b, direction);
+    let behaviour_outcome = crate::behaviour::compare_behaviour(a, b);
     let outcomes = vec![
         (Layer::Structure, structure_outcome),
         (Layer::Dependency, dependency_outcome),
         (Layer::Configuration, configuration_outcome),
+        (Layer::Interface, interface_outcome),
+        (Layer::Behaviour, behaviour_outcome),
+        (Layer::Operational, operational_outcome),
     ];
     drafts.extend(crate::structural::structural_drafts(&outcomes));
     let structural = crate::structural::structural_scores(&outcomes);
@@ -159,6 +170,7 @@ pub fn compare(
     let effective_ancestry = effective_ancestry_for_scoring(a, b);
     let score: DriftScore = drift_score(&effective_ancestry, diff, &structural, &config.drift);
 
+    let clusters = azusa_diff::cluster(diff);
     let risk = assess_risk(&score, direction, &drafts);
     let recommendations = recommend(direction, diff, &effective_ancestry);
     let summary = DriftSummary {
@@ -202,8 +214,8 @@ pub fn compare(
         risk,
         summary,
         observations,
-        intent: None,
-        clusters: azusa_diff::cluster(diff),
+        intent: crate::intent::assess(a, b, direction, &clusters),
+        clusters,
         recommendations,
         provenance: azusa_model::Provenance {
             tool_version: azusa_model::TOOL_VERSION.to_owned(),
@@ -950,6 +962,85 @@ mod tests {
         assert_eq!(report.direction, DriftDirection::InSync);
         assert!(!report.score.layers.contains_key(&Layer::Structure));
         assert!(!report.score.layers.contains_key(&Layer::Dependency));
+        assert!(!report.score.layers.contains_key(&Layer::Interface));
+        assert!(!report.score.layers.contains_key(&Layer::Behaviour));
+        assert!(!report.score.layers.contains_key(&Layer::Operational));
+    }
+
+    #[test]
+    fn public_api_shrink_is_observed_as_interface_drift() {
+        let fixture = FixtureRepo::with_remote();
+        fixture.write(
+            "crates/app/src/lib.rs",
+            "pub fn one() {}\npub fn two() {}\n",
+        );
+        fixture.commit_all("feat: two public items");
+        fixture.sync_remote();
+        // Locally remove a public item: the interface surface shrinks.
+        fixture.write("crates/app/src/lib.rs", "pub fn one() {}\n");
+
+        let report = report_for(&fixture.path, "worktree", "upstream");
+        let observation = report
+            .observations
+            .iter()
+            .find(|o| o.category == Layer::Interface && o.title.contains("present only in upstream"))
+            .expect("interface observation");
+        assert_eq!(observation.severity, Severity::Medium);
+        assert!(
+            observation
+                .evidence
+                .iter()
+                .flat_map(|e| &e.references)
+                .any(|r| r.contains("crates/app/src/lib.rs"))
+        );
+        assert!(report.score.layers.contains_key(&Layer::Interface));
+        assert!(report.score.layers[&Layer::Interface] > 0.0);
+    }
+
+    #[test]
+    fn test_file_removal_is_observed_as_behaviour_drift() {
+        let fixture = FixtureRepo::with_remote();
+        fixture.write("tests/cli.rs", "#[test]\nfn t() {}\n#[test]\nfn u() {}\n");
+        fixture.commit_all("test: cli coverage");
+        fixture.sync_remote();
+        // Remote strips the test declarations: coverage disappears upstream.
+        fixture.advance_remote_files(
+            &[("tests/cli.rs", "// tests moved elsewhere\n")],
+            "test: drop coverage",
+        );
+
+        let report = report_for(&fixture.path, "worktree", "upstream");
+        assert!(
+            report
+                .observations
+                .iter()
+                .any(|o| o.category == Layer::Behaviour && o.title.contains("test declaration"))
+        );
+        assert!(report.score.layers.contains_key(&Layer::Behaviour));
+    }
+
+    #[test]
+    fn operational_unit_changes_are_observed() {
+        let fixture = FixtureRepo::with_remote();
+        fixture.write(".github/workflows/ci.yml", "on: [push]\njobs: {}\n");
+        fixture.commit_all("ci: initial workflow");
+        fixture.sync_remote();
+        // Remote adds a kubernetes service manifest: the deployment surface
+        // grows upstream.
+        fixture.advance_remote_files(
+            &[("k8s/service.yaml", "apiVersion: v1\nkind: Service\n")],
+            "ops: add service manifest",
+        );
+
+        let report = report_for(&fixture.path, "worktree", "upstream");
+        assert!(
+            report
+                .observations
+                .iter()
+                .any(|o| o.category == Layer::Operational && o.title.contains("operational unit"))
+        );
+        assert!(report.score.layers.contains_key(&Layer::Operational));
+        assert!(report.score.layers[&Layer::Operational] > 0.0);
     }
 
     #[test]

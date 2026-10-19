@@ -12,6 +12,7 @@ rust-version.workspace = true
 azusa-model = { path = "../azusa-model" }
 azusa-diff = { path = "../azusa-diff" }
 azusa-graph = { path = "../azusa-graph" }
+azusa-policy = { path = "../azusa-policy" }
 azusa-git = { path = "../azusa-git" }
 azusa-fs = { path = "../azusa-fs" }
 serde = { version = "1", features = ["derive"] }

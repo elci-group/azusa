@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The azusa Authors
+// SPDX-License-Identifier: MIT
+
 //! Fileset comparison.
 //!
 //! Deterministic diff of two [`FilesystemState`]s: additions, deletions,
@@ -308,7 +311,7 @@ mod tests {
         let a = state(&[("src/auth.rs", entry("fn a() {}"))]);
         let b = state(&[("docs/billing.md", entry("# billing notes\nmore\nmore\n"))]);
         let d = diff(&a, &b, &RenameOptions::default());
-        assert!(d.renamed.is_empty());
+        assert!(d.renamed.is_empty(), "no rename should be detected");
         assert_eq!(d.added.len(), 1);
         assert_eq!(d.deleted.len(), 1);
     }

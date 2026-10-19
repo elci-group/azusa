@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The azusa Authors
+// SPDX-License-Identifier: MIT
+
 //! Output rendering: human, JSON, NDJSON, quiet.
 //!
 //! JSON is the machine contract; human output is presentation only. Every
@@ -179,6 +182,20 @@ pub fn report_to_human(report: &DriftReport) -> String {
             out.push_str(&format!(
                 "      … and {} more clusters\n",
                 report.clusters.len() - 10
+            ));
+        }
+    }
+
+    if let Some(intent) = &report.intent {
+        out.push_str(&format!(
+            "\nINTENT       {} (confidence {:.2})\n",
+            intent.classification.as_str(),
+            intent.confidence
+        ));
+        for signal in intent.signals.iter().take(4) {
+            out.push_str(&format!(
+                "  signal: {} [{:+.1}]\n",
+                signal.description, signal.weight
             ));
         }
     }

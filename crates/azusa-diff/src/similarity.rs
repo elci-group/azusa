@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The azusa Authors
+// SPDX-License-Identifier: MIT
+
 //! String similarity for rename detection.
 //!
 //! Jaro–Winkler similarity over repository-relative paths: deterministic,

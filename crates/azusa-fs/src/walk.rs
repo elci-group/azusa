@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The azusa Authors
+// SPDX-License-Identifier: MIT
+
 //! Ignore-aware directory walking and snapshotting.
 //!
 //! The walker respects `.gitignore` files (via the `ignore` crate), always

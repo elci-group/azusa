@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The azusa Authors
+// SPDX-License-Identifier: MIT
+
 //! Text heuristics shared by state providers.
 //!
 //! Both the filesystem and Git providers classify blobs as text and count

@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The azusa Authors
+// SPDX-License-Identifier: MIT
+
 //! The Git state provider.
 //!
 //! Resolves [`GitSelector`]s against a repository and captures them as
@@ -147,6 +150,7 @@ impl GitProvider {
             structure: StructureState::default(),
             dependencies: DependencyState::default(),
             configuration: ConfigurationState::default(),
+            operations: azusa_model::OperationalState::default(),
             behaviour: None,
             captured_text,
         })

@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The azusa Authors
+// SPDX-License-Identifier: MIT
+
 //! Engine configuration.
 //!
 //! Weights, thresholds and rename options live in an optional `azusa.toml`
@@ -14,6 +17,7 @@ use serde::{Deserialize, Serialize};
 use azusa_diff::RenameOptions;
 use azusa_model::Layer;
 use azusa_model::fileset_digest;
+use azusa_policy::Policy;
 
 /// File name azusa looks for.
 pub const CONFIG_FILE_NAME: &str = "azusa.toml";
@@ -158,6 +162,9 @@ pub struct AzusaConfig {
     /// State relatedness thresholds.
     #[serde(default)]
     pub relatedness: Relatedness,
+    /// Drift policy (checked by `azusa policy check`).
+    #[serde(default)]
+    pub policy: Policy,
 }
 
 /// Rename-detection thresholds (mirrors `azusa-diff` options).

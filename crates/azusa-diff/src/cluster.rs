@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The azusa Authors
+// SPDX-License-Identifier: MIT
+
 //! Change clustering.
 //!
 //! Groups a [`FilesetDiff`] into logical clusters so a wall of changed paths

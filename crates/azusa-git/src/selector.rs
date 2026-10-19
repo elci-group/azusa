@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The azusa Authors
+// SPDX-License-Identifier: MIT
+
 //! Git state selectors.
 //!
 //! Selectors name the state a caller wants captured:

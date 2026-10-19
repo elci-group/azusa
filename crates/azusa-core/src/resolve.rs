@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The azusa Authors
+// SPDX-License-Identifier: MIT
+
 //! State resolution: selectors to captured states.
 //!
 //! A selector names one repository state: a Git keyword (`worktree`,
@@ -191,7 +194,7 @@ mod tests {
         let (_, a_ref, _, b_ref, notes) = resolver.resolve_default_pair().unwrap();
         assert_eq!(a_ref.spec, "worktree");
         assert_eq!(b_ref.spec, "upstream");
-        assert!(notes.is_empty());
+        assert!(notes.is_empty(), "expected no notes, got {notes:?}");
 
         let plain = FixtureRepo::new();
         let resolver = StateResolver::new(&plain.path);

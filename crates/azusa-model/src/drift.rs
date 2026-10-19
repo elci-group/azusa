@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The azusa Authors
+// SPDX-License-Identifier: MIT
+
 //! Drift model.
 //!
 //! Comparing two [`crate::RepositoryState`]s produces a [`DriftReport`]:

@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The azusa Authors
+// SPDX-License-Identifier: MIT
+
 //! Azusa domain model.
 //!
 //! Pure data structures describing repository states, drift observations,
@@ -11,6 +14,7 @@
 
 pub mod drift;
 pub mod hash;
+pub mod plan;
 pub mod state;
 pub mod text;
 
@@ -21,11 +25,15 @@ pub use drift::{
     RepositoryInfo, RiskLevel, Severity, Side, StateRef,
 };
 pub use hash::{ContentHash, content_hash, content_hash_reader, fileset_digest};
+pub use plan::{
+    PLAN_SCHEMA_VERSION, PlanStep, PlanStepKind, ReconciliationPlan, SafetyGate,
+};
 pub use state::{
     Ancestry, BehaviourState, CAPTURED_TEXT_MAX_BYTES, ConfigurationFile, ConfigurationKind,
     ConfigurationState, DependencyEntry, DependencyKind, DependencyState, FileEntry, FileKind,
-    FilesystemState, LockfileInfo, ModuleInfo, ModuleKind, Relation, RepositoryState,
-    StateIdentity, StructureState, UncommittedSummary, VcsIdentity, is_analysis_file,
+    FilesystemState, LockfileInfo, ModuleInfo, ModuleKind, OperationalState, OperationalUnit,
+    Relation, RepositoryState, StateIdentity, StructureState, UncommittedSummary, VcsIdentity,
+    is_analysis_file,
 };
 pub use text::{count_lines, looks_like_text};
 

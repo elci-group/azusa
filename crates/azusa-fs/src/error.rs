@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The azusa Authors
+// SPDX-License-Identifier: MIT
+
 //! Errors for the filesystem provider.
 
 use std::path::PathBuf;

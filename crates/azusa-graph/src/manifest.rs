@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The azusa Authors
+// SPDX-License-Identifier: MIT
+
 //! Cargo manifest discovery and parsing.
 //!
 //! Parses every `Cargo.toml` retained in a state's `captured_text`,
