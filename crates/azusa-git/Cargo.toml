@@ -11,7 +11,7 @@ rust-version.workspace = true
 [dependencies]
 azusa-model = { path = "../azusa-model" }
 azusa-fs = { path = "../azusa-fs" }
-git2 = { version = "0.20", default-features = false }
+git2 = { version = "0.21", default-features = false }
 serde = { version = "1", features = ["derive"] }
 thiserror = "2"
 tempfile = { version = "3", optional = true }
