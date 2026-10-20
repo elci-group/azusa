@@ -13,7 +13,7 @@ use std::collections::BTreeMap;
 use serde::{Deserialize, Serialize};
 
 /// Canonical schema version of the drift report artefact.
-pub const DRIFT_REPORT_SCHEMA_VERSION: u32 = 1;
+pub const DRIFT_REPORT_SCHEMA_VERSION: u32 = 2;
 
 /// The comparison layers, L0–L9. Layer names double as drift categories.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
@@ -239,6 +239,45 @@ pub struct DriftObservation {
     pub side: Side,
     /// Concrete evidence backing the observation.
     pub evidence: Vec<Evidence>,
+    /// Epistemic strength of the observation: how the evidence was
+    /// obtained, independent of its severity. Autonomous consumers gate on
+    /// this — act on `fact`/`derived`, review `heuristic`.
+    #[serde(default)]
+    pub strength: EvidenceStrength,
+}
+
+/// How an observation's evidence was obtained.
+///
+/// Deliberately orthogonal to severity and confidence: `severity` says how
+/// much the change matters, `strength` says how much the *claim* can be
+/// trusted.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Default)]
+#[serde(rename_all = "kebab-case")]
+pub enum EvidenceStrength {
+    /// Verified directly from content: digests, merge-base, exact identity.
+    #[default]
+    Fact,
+    /// Derived deterministically from parsed declarations or structured
+    /// inventories (symbol tables, manifests).
+    Derived,
+    /// A heuristic inference (lexical proxies, path similarity).
+    Heuristic,
+    /// Speculative: pattern-based judgement with no direct evidence
+    /// (reserved for semantic layers).
+    Speculative,
+}
+
+impl EvidenceStrength {
+    /// Canonical lowercase name.
+    #[must_use]
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Fact => "fact",
+            Self::Derived => "derived",
+            Self::Heuristic => "heuristic",
+            Self::Speculative => "speculative",
+        }
+    }
 }
 
 /// Composite drift index: per-layer scores plus the weighted overall.

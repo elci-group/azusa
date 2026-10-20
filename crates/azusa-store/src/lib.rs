@@ -226,11 +226,11 @@ impl Store {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::collections::BTreeMap;
     use azusa_model::{
         AnalysisMode, DriftDirection, DriftRisk, DriftScore, DriftSummary, Provenance,
         RepositoryInfo, RiskLevel, StateRef,
     };
+    use std::collections::BTreeMap;
 
     fn report() -> DriftReport {
         DriftReport {

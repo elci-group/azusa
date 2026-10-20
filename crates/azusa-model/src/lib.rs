@@ -21,19 +21,17 @@ pub mod text;
 pub use drift::{
     AnalysisMode, ChangeCluster, ClusterKind, DRIFT_REPORT_SCHEMA_VERSION, DriftDirection,
     DriftObservation, DriftReport, DriftRisk, DriftScore, DriftSummary, Evidence, EvidenceKind,
-    IntentAssessment, IntentClass, IntentSignal, Layer, Priority, Provenance, Recommendation,
-    RepositoryInfo, RiskLevel, Severity, Side, StateRef,
+    EvidenceStrength, IntentAssessment, IntentClass, IntentSignal, Layer, Priority, Provenance,
+    Recommendation, RepositoryInfo, RiskLevel, Severity, Side, StateRef,
 };
 pub use hash::{ContentHash, content_hash, content_hash_reader, fileset_digest};
-pub use plan::{
-    PLAN_SCHEMA_VERSION, PlanStep, PlanStepKind, ReconciliationPlan, SafetyGate,
-};
+pub use plan::{PLAN_SCHEMA_VERSION, PlanStep, PlanStepKind, ReconciliationPlan, SafetyGate};
 pub use state::{
     Ancestry, BehaviourState, CAPTURED_TEXT_MAX_BYTES, ConfigurationFile, ConfigurationKind,
     ConfigurationState, DependencyEntry, DependencyKind, DependencyState, FileEntry, FileKind,
     FilesystemState, LockfileInfo, ModuleInfo, ModuleKind, OperationalState, OperationalUnit,
-    Relation, RepositoryState, StateIdentity, StructureState, UncommittedSummary, VcsIdentity,
-    is_analysis_file,
+    PublicSymbol, Relation, RepositoryState, StateIdentity, StructureState, UncommittedSummary,
+    VcsIdentity, is_analysis_file,
 };
 pub use text::{count_lines, looks_like_text};
 
@@ -86,4 +84,17 @@ fn model_smoke() {
         "version must be numeric: {version}"
     );
     assert!(!version.ends_with('\n'));
+}
+
+/// One version authority: the embedded root `VERSION` and the workspace
+/// Cargo package version must never disagree. When kaptaind bumps VERSION,
+/// run `scripts/sync-version.sh` (CI enforces the equality) so crate
+/// metadata, SBOMs and external scanners see the same release number.
+#[test]
+fn version_authority_is_unified() {
+    assert_eq!(
+        tool_version(),
+        env!("CARGO_PKG_VERSION"),
+        "root VERSION and workspace Cargo version diverged; run scripts/sync-version.sh"
+    );
 }

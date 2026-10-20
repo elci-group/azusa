@@ -9,7 +9,9 @@
 //! deterministic layer score; empty facets on both sides mean "not
 //! analyzed" and contribute nothing.
 
-use azusa_model::{BehaviourState, DriftDirection, Evidence, EvidenceKind, Layer, Severity, Side};
+use azusa_model::{
+    BehaviourState, DriftDirection, Evidence, EvidenceKind, EvidenceStrength, Layer, Severity, Side,
+};
 
 use crate::engine::Draft;
 use crate::scoring::{round2, saturating, side_severity};
@@ -21,7 +23,13 @@ fn facet(state: &azusa_model::RepositoryState) -> BehaviourState {
     state.behaviour.clone().unwrap_or_default()
 }
 
-/// L6: public API surface, from per-file public item counts.
+/// L6: public API surface, compared at symbol identity level.
+///
+/// Each state's facet carries extracted public symbols (fqn, kind,
+/// normalized signature) per file. The diff reports symbols that exist on
+/// only one side and symbols whose signature changed with the same
+/// identity — so a parameter-type change registers as interface drift even
+/// when the symbol count is unchanged.
 #[must_use]
 #[allow(clippy::too_many_lines)]
 pub(crate) fn compare_interfaces(
@@ -31,130 +39,118 @@ pub(crate) fn compare_interfaces(
 ) -> crate::structural::LayerOutcome {
     let mut drafts = Vec::new();
     let (fa, fb) = (facet(a), facet(b));
-    if fa.public_items_per_file.is_empty() && fb.public_items_per_file.is_empty() {
-        return crate::structural::LayerOutcome {
-            drafts,
-            score: 0.0,
+    if fa.public_symbols.is_empty() && fb.public_symbols.is_empty() {
+        return crate::structural::LayerOutcome { drafts, score: 0.0 };
+    }
+
+    // Flatten to one identity map: key = file::fqn.
+    let symbol_map =
+        |facet: &BehaviourState| -> std::collections::BTreeMap<String, (String, String)> {
+            facet
+                .public_symbols
+                .iter()
+                .flat_map(|(path, symbols)| {
+                    symbols.iter().map(move |symbol| {
+                        (
+                            format!("{path}::{}", symbol.fqn),
+                            (symbol.kind.clone(), symbol.signature.clone()),
+                        )
+                    })
+                })
+                .collect()
         };
-    }
+    let (symbols_a, symbols_b) = (symbol_map(&fa), symbol_map(&fb));
 
-    let mut removed_files = Vec::new();
-    let mut added_files = Vec::new();
-    let mut shrunk: Vec<(String, u64, u64)> = Vec::new();
-    let mut grown: Vec<(String, u64, u64)> = Vec::new();
-
-    for (path, items_b) in &fb.public_items_per_file {
-        match fa.public_items_per_file.get(path) {
-            None => added_files.push(path.clone()),
-            Some(items_a) if items_a < items_b => grown.push((path.clone(), *items_a, *items_b)),
-            Some(items_a) if items_a > items_b => shrunk.push((path.clone(), *items_a, *items_b)),
-            Some(_) => {}
+    let mut removed: Vec<String> = Vec::new();
+    let mut added: Vec<String> = Vec::new();
+    let mut changed: Vec<String> = Vec::new();
+    for (key, (kind_a, signature_a)) in &symbols_a {
+        match symbols_b.get(key) {
+            None => removed.push(key.clone()),
+            Some((kind_b, signature_b)) => {
+                if kind_a != kind_b || signature_a != signature_b {
+                    changed.push(key.clone());
+                }
+            }
         }
     }
-    for path in fa.public_items_per_file.keys() {
-        if !fb.public_items_per_file.contains_key(path) {
-            removed_files.push(path.clone());
+    for key in symbols_b.keys() {
+        if !symbols_a.contains_key(key) {
+            added.push(key.clone());
         }
     }
 
-    let mut score_count = 2.0 * removed_files.len() as f32 + added_files.len() as f32;
-    for (_, items_a, items_b) in &shrunk {
-        score_count += 2.0 * (items_a - items_b) as f32;
-    }
-    for (_, items_a, items_b) in &grown {
-        score_count += (items_b - items_a) as f32;
-    }
+    // Score: a changed signature (same identity, different declaration) is
+    // the strongest breaking signal; removals next; additions cheapest.
+    let count = 2.0 * removed.len() as f32 + 3.0 * changed.len() as f32 + added.len() as f32;
 
-    if !removed_files.is_empty() {
+    if !removed.is_empty() {
         drafts.push(Draft {
             category: Layer::Interface,
-            severity: side_severity(true, direction, removed_files.len()),
+            strength: EvidenceStrength::Derived,
+            severity: side_severity(true, direction, removed.len()),
             confidence: 1.0,
             title: format!(
-                "{} public-surface file(s) present only in {}",
-                removed_files.len(),
+                "{} public symbol(s) present only in {}",
+                removed.len(),
                 a.identity.label
             ),
-            detail: "files carrying public items on one side are absent from the other".to_owned(),
-            side: Side::A,
-            evidence: vec![Evidence {
-                kind: EvidenceKind::File,
-                description: "public-surface files absent from the second state".to_owned(),
-                references: removed_files.iter().take(MAX_EVIDENCE_PATHS).cloned().collect(),
-            }],
-        });
-    }
-    if !added_files.is_empty() {
-        drafts.push(Draft {
-            category: Layer::Interface,
-            severity: side_severity(false, direction, added_files.len()),
-            confidence: 1.0,
-            title: format!(
-                "{} public-surface file(s) present only in {}",
-                added_files.len(),
-                b.identity.label
-            ),
-            detail: "files carrying public items on one side are absent from the other".to_owned(),
-            side: Side::B,
-            evidence: vec![Evidence {
-                kind: EvidenceKind::File,
-                description: "public-surface files absent from the first state".to_owned(),
-                references: added_files.iter().take(MAX_EVIDENCE_PATHS).cloned().collect(),
-            }],
-        });
-    }
-    if !shrunk.is_empty() {
-        let items_removed: u64 = shrunk.iter().map(|(_, items_a, items_b)| items_a - items_b).sum();
-        drafts.push(Draft {
-            category: Layer::Interface,
-            severity: side_severity(true, direction, items_removed as usize),
-            confidence: 1.0,
-            title: format!(
-                "{items_removed} public item(s) present only in {}",
-                a.identity.label
-            ),
-            detail: "public items exist on this side that the other state lacks; reconciling toward the other state removes them from the interface"
+            detail: "public symbols exist on this side that the other state lacks; reconciling toward the other state removes them from the API surface"
                 .to_owned(),
             side: Side::A,
             evidence: vec![Evidence {
                 kind: EvidenceKind::File,
-                description: "files with fewer public items (items in first → second)".to_owned(),
-                references: shrunk
-                    .iter()
-                    .take(MAX_EVIDENCE_PATHS)
-                    .map(|(path, items_a, items_b)| format!("{path}: {items_a} → {items_b}"))
-                    .collect(),
+                description: "public symbols absent from the second state".to_owned(),
+                references: removed.iter().take(MAX_EVIDENCE_PATHS).cloned().collect(),
             }],
         });
     }
-    if !grown.is_empty() {
-        let items_added: u64 = grown.iter().map(|(_, items_a, items_b)| items_b - items_a).sum();
+    if !added.is_empty() {
         drafts.push(Draft {
             category: Layer::Interface,
-            severity: side_severity(false, direction, items_added as usize),
+            strength: EvidenceStrength::Derived,
+            severity: side_severity(false, direction, added.len()),
             confidence: 1.0,
             title: format!(
-                "{items_added} public item(s) present only in {}",
+                "{} public symbol(s) present only in {}",
+                added.len(),
                 b.identity.label
             ),
-            detail: "public items exist on this side that the other state lacks; reconciling toward the other state removes them from the interface"
+            detail: "public symbols exist on this side that the other state lacks; reconciling toward the other state removes them from the API surface"
                 .to_owned(),
             side: Side::B,
             evidence: vec![Evidence {
                 kind: EvidenceKind::File,
-                description: "files with more public items (items in first → second)".to_owned(),
-                references: grown
-                    .iter()
-                    .take(MAX_EVIDENCE_PATHS)
-                    .map(|(path, items_a, items_b)| format!("{path}: {items_a} → {items_b}"))
-                    .collect(),
+                description: "public symbols absent from the first state".to_owned(),
+                references: added.iter().take(MAX_EVIDENCE_PATHS).cloned().collect(),
+            }],
+        });
+    }
+    if !changed.is_empty() {
+        drafts.push(Draft {
+            category: Layer::Interface,
+            strength: EvidenceStrength::Derived,
+            severity: if changed.len() >= 5 {
+                Severity::High
+            } else {
+                Severity::Medium
+            },
+            confidence: 1.0,
+            title: format!("{} public signature(s) changed", changed.len()),
+            detail: "same symbol identity, different declaration: potential breaking API change that a pure symbol count would miss"
+                .to_owned(),
+            side: Side::Both,
+            evidence: vec![Evidence {
+                kind: EvidenceKind::File,
+                description: "symbols whose declaration signature changed".to_owned(),
+                references: changed.iter().take(MAX_EVIDENCE_PATHS).cloned().collect(),
             }],
         });
     }
 
     crate::structural::LayerOutcome {
         drafts,
-        score: round2(saturating(score_count, 6.0)),
+        score: round2(saturating(count, 6.0)),
     }
 }
 
@@ -168,28 +164,23 @@ pub(crate) fn compare_behaviour(
     let mut drafts = Vec::new();
     let (fa, fb) = (facet(a), facet(b));
     if fa == BehaviourState::default() && fb == BehaviourState::default() {
-        return crate::structural::LayerOutcome {
-            drafts,
-            score: 0.0,
-        };
+        return crate::structural::LayerOutcome { drafts, score: 0.0 };
     }
 
-    let removed =
-        |a_side: &[String], b_side: &[String]| -> Vec<String> {
-            a_side
-                .iter()
-                .filter(|path| !b_side.contains(path))
-                .cloned()
-                .collect()
-        };
-    let added =
-        |a_side: &[String], b_side: &[String]| -> Vec<String> {
-            b_side
-                .iter()
-                .filter(|path| !a_side.contains(path))
-                .cloned()
-                .collect()
-        };
+    let removed = |a_side: &[String], b_side: &[String]| -> Vec<String> {
+        a_side
+            .iter()
+            .filter(|path| !b_side.contains(path))
+            .cloned()
+            .collect()
+    };
+    let added = |a_side: &[String], b_side: &[String]| -> Vec<String> {
+        b_side
+            .iter()
+            .filter(|path| !a_side.contains(path))
+            .cloned()
+            .collect()
+    };
 
     let mut score_count = 0.0_f32;
 
@@ -200,6 +191,7 @@ pub(crate) fn compare_behaviour(
         score_count += 1.5 * tests_removed.len() as f32;
         drafts.push(Draft {
             category: Layer::Behaviour,
+            strength: EvidenceStrength::Heuristic,
             severity: if tests_removed.len() >= 3 {
                 Severity::High
             } else {
@@ -221,6 +213,7 @@ pub(crate) fn compare_behaviour(
         score_count += tests_added.len() as f32;
         drafts.push(Draft {
             category: Layer::Behaviour,
+            strength: EvidenceStrength::Heuristic,
             severity: Severity::Low,
             confidence: 1.0,
             title: format!("{} test file(s) added", tests_added.len()),
@@ -229,7 +222,11 @@ pub(crate) fn compare_behaviour(
             evidence: vec![Evidence {
                 kind: EvidenceKind::File,
                 description: "added test files".to_owned(),
-                references: tests_added.iter().take(MAX_EVIDENCE_PATHS).cloned().collect(),
+                references: tests_added
+                    .iter()
+                    .take(MAX_EVIDENCE_PATHS)
+                    .cloned()
+                    .collect(),
             }],
         });
     }
@@ -240,6 +237,7 @@ pub(crate) fn compare_behaviour(
         score_count += 0.2 * (-decl_delta) as f32;
         drafts.push(Draft {
             category: Layer::Behaviour,
+            strength: EvidenceStrength::Heuristic,
             severity: Severity::Medium,
             confidence: 0.9,
             title: format!("{0} test declaration(s) removed", -decl_delta),
@@ -258,6 +256,7 @@ pub(crate) fn compare_behaviour(
         score_count += 0.1 * decl_delta as f32;
         drafts.push(Draft {
             category: Layer::Behaviour,
+            strength: EvidenceStrength::Heuristic,
             severity: Severity::Low,
             confidence: 0.9,
             title: format!("{decl_delta} test declaration(s) added"),
@@ -281,6 +280,7 @@ pub(crate) fn compare_behaviour(
         score_count += 2.0 * entries_removed.len() as f32;
         drafts.push(Draft {
             category: Layer::Behaviour,
+            strength: EvidenceStrength::Heuristic,
             severity: Severity::Medium,
             confidence: 1.0,
             title: format!("{} entry point(s) removed", entries_removed.len()),
@@ -289,7 +289,11 @@ pub(crate) fn compare_behaviour(
             evidence: vec![Evidence {
                 kind: EvidenceKind::File,
                 description: "removed entry points".to_owned(),
-                references: entries_removed.iter().take(MAX_EVIDENCE_PATHS).cloned().collect(),
+                references: entries_removed
+                    .iter()
+                    .take(MAX_EVIDENCE_PATHS)
+                    .cloned()
+                    .collect(),
             }],
         });
     }
@@ -297,6 +301,7 @@ pub(crate) fn compare_behaviour(
         score_count += 1.0 * entries_added.len() as f32;
         drafts.push(Draft {
             category: Layer::Behaviour,
+            strength: EvidenceStrength::Heuristic,
             severity: Severity::Low,
             confidence: 1.0,
             title: format!("{} entry point(s) added", entries_added.len()),
@@ -305,7 +310,11 @@ pub(crate) fn compare_behaviour(
             evidence: vec![Evidence {
                 kind: EvidenceKind::File,
                 description: "added entry points".to_owned(),
-                references: entries_added.iter().take(MAX_EVIDENCE_PATHS).cloned().collect(),
+                references: entries_added
+                    .iter()
+                    .take(MAX_EVIDENCE_PATHS)
+                    .cloned()
+                    .collect(),
             }],
         });
     }
@@ -316,7 +325,11 @@ pub(crate) fn compare_behaviour(
     for path in &fa.build_scripts {
         if fb.build_scripts.contains(path) {
             let hash = |state: &azusa_model::RepositoryState| {
-                state.filesystem.files.get(path).map(|entry| entry.hash.clone())
+                state
+                    .filesystem
+                    .files
+                    .get(path)
+                    .map(|entry| entry.hash.clone())
             };
             if hash(a) != hash(b) {
                 build_changed.push(path.clone());
@@ -327,6 +340,7 @@ pub(crate) fn compare_behaviour(
         score_count += 2.0 * build_changed.len() as f32;
         drafts.push(Draft {
             category: Layer::Behaviour,
+            strength: EvidenceStrength::Heuristic,
             severity: Severity::Medium,
             confidence: 1.0,
             title: format!("{} build script(s) changed", build_changed.len()),
@@ -336,7 +350,11 @@ pub(crate) fn compare_behaviour(
             evidence: vec![Evidence {
                 kind: EvidenceKind::File,
                 description: "changed build scripts".to_owned(),
-                references: build_changed.iter().take(MAX_EVIDENCE_PATHS).cloned().collect(),
+                references: build_changed
+                    .iter()
+                    .take(MAX_EVIDENCE_PATHS)
+                    .cloned()
+                    .collect(),
             }],
         });
     }
@@ -348,6 +366,7 @@ pub(crate) fn compare_behaviour(
         score_count += 0.5 * benches_changed as f32;
         drafts.push(Draft {
             category: Layer::Behaviour,
+            strength: EvidenceStrength::Heuristic,
             severity: Severity::Low,
             confidence: 1.0,
             title: format!("{benches_changed} benchmark file(s) changed"),

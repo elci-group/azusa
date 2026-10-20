@@ -72,6 +72,31 @@ Layer scores: structure `10·c/(c+10)` with `c = added + 2·removed +
 0.2·dir-churn`; dependency `10·c/(c+8)` with `c = 3·major + 2·minor +
 1·patch + 1.5·added-or-removed + 1·lockfile-diverged`; configuration
 `10·c/(c+6)` with per-kind weights (2.5 deploy/CI … 0.5 formatting).
+Filesystem is tier-aware: renames discount by evidence tier (exact-identity
+×0.5, content-similarity ×0.75, path-heuristic ×1.5) and deletions weigh
+double.
+
+## Epistemic strength
+
+Every observation carries an `EvidenceStrength`: `fact` (verified from
+content — digests, merge-base, exact renames), `derived` (parsed
+declarations — API symbols, signatures), `heuristic` (lexical or
+path-similarity proxies — the behavioural inventory, content-similar and
+path-heuristic renames), `speculative` (reserved for semantic layers).
+Strength is orthogonal to severity and confidence; autonomous consumers
+gate on it — act on `fact`/`derived`, review `heuristic`. The report
+schema is version 2 (strength addition).
+
+## Rename detection confidence
+
+`azusa-diff` pairs deletions with additions in two stages: exact content
+identity (hash-equal) and a path/size heuristic stage. Every rename
+carries an explicit `RenameTier` — `exact-identity`, `content-similarity`
+(similarity ≥ 0.9 with changed content) or `path-heuristic` — because the
+`similarity` field means different things per stage (content identity vs
+path similarity) and downstream systems may act causally on the pairing.
+Weak tiers discount less in scoring, so a doubtful pairing costs nearly as
+much as an unexplained add + delete.
 
 ## Behavioural layers (L6–L7)
 
@@ -88,21 +113,27 @@ function of the listing plus retained text:
 
 `azusa-core::behaviour` compares facets:
 
-- **L6 interfaces** — files and per-file public item counts that exist on
-  only one side. Severity is direction-aware: items on the side that
-  reconciliation would overwrite (behind the drift source) would vanish
-  from the interface and rate medium (high at ≥5 items); items on the
-  drift source's side rate low. Bidirectional drift rates both sides
-  medium; unknown direction rates low. Score: `10·c/(c+6)` with
-  `c = 2·removed-files + added-files + 2·items-only-in-A +
-  items-only-in-B`.
-- **L7 behaviour** — removed tests rate medium (high at ≥3 files), removed
-  `#[test]` declarations medium, entry-point removals medium, changed
-  build scripts medium (they execute at compile time); additions and
-  benchmark churn rate low. Score: `10·c/(c+8)` with `c = 1.5·tests-
-  removed + tests-added + 0.2·declarations-removed + 0.1·added +
-  2·entry-removals + entry-additions + 2·build-script-changes +
-  0.5·bench-churn`.
+- **L6 interfaces** — the public API compared at **symbol identity**
+  level. `azusa-graph::behaviour` extracts each unrestricted-`pub`
+  declaration as a `PublicSymbol`: crate-relative fully qualified name
+  (module path from the file plus nested `mod` blocks), item kind and a
+  normalized declaration signature (multi-line headers accumulate until
+  the signature ends; whitespace is collapsed). Restricted visibility
+  (`pub(crate)`, `pub(in …)`) is excluded — it is not external API. The
+  diff reports symbols present on only one side and same-identity symbols
+  whose signature changed (a parameter-type change registers even when
+  the symbol count is unchanged). Side-attributed severity follows
+  `side_severity`; changed signatures rate medium (high at ≥5). Score:
+  `10·c/(c+6)` with `c = 2·removed + 3·changed + added`.
+- **L7 behaviour** (the *verification surface*: the JSON layer id stays
+  `behaviour` for compatibility) — removed tests rate medium (high at ≥3
+  files), removed `#[test]` declarations medium, entry-point removals
+  medium, changed build scripts medium (they execute at compile time);
+  additions and benchmark churn rate low. Score: `10·c/(c+8)` with
+  `c = 1.5·tests-removed + tests-added + 0.2·declarations-removed +
+  0.1·added + 2·entry-removals + entry-additions + 2·build-script-changes
+  + 0.5·bench-churn`. This layer inventories verification infrastructure;
+  runtime-behaviour comparison belongs to future L8 semantics.
 
 Both layers stay silent when both facets are empty (not analyzed) and are
 excluded from the composite rather than counted as zero drift.
@@ -181,7 +212,10 @@ weights; the normalised sum maps onto five classes (`intentional`,
 `probably-intentional`, `indeterminate`, `probably-accidental`,
 `accidental`) with a confidence derived from signal count. No signals or
 in-sync states produce no assessment at all — "indeterminate" is a
-first-class answer, never a forced choice.
+first-class answer, never a forced choice. Intent is fully orthogonal:
+it never modifies the drift score or the risk level — the inference chain
+stays `drift (what changed) → risk (consequences) → intent (why we suspect
+it) → policy (is this permitted) → plan (what happens next)`.
 
 ## Policy engine
 

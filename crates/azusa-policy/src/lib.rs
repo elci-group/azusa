@@ -319,8 +319,8 @@ fn check_configuration(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::collections::BTreeMap;
     use azusa_model::{DriftScore, DriftSummary, Provenance, RepositoryInfo, RiskLevel, StateRef};
+    use std::collections::BTreeMap;
 
     fn report_with(overall: f32, observations: Vec<DriftObservation>) -> DriftReport {
         DriftReport {
@@ -371,6 +371,7 @@ mod tests {
             id: "DRIFT-0001".into(),
             category,
             severity: Severity::Low,
+            strength: azusa_model::EvidenceStrength::Fact,
             confidence: 1.0,
             title: title.into(),
             detail: String::new(),

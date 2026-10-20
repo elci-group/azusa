@@ -88,7 +88,9 @@ pub fn watch(
         cycle += 1;
         let quick = azusa_fs::FsProvider::new(&root)
             .quick_digest()
-            .map_err(|e| RunError::Analysis(azusa_core::CoreError::Provider(format!("watch: {e}"))))?;
+            .map_err(|e| {
+                RunError::Analysis(azusa_core::CoreError::Provider(format!("watch: {e}")))
+            })?;
 
         if quick == state.last_full_quick_digest {
             // Stage 0: idle — no analysis, no history churn.
@@ -118,11 +120,7 @@ pub fn watch(
             state.streak = if escalated { state.streak + 1 } else { 0 };
             state.last_full_quick_digest = quick;
             state.last_score = Some(report.score.overall);
-            report
-                .risk
-                .level
-                .as_str()
-                .clone_into(&mut state.last_risk);
+            report.risk.level.as_str().clone_into(&mut state.last_risk);
             store.save_watch_state(&state);
 
             let mut plan_path = None;
@@ -328,7 +326,11 @@ pub fn plan(specs: &[String], config: &AzusaConfig, opts: &OutputOpts) -> Result
                 println!(
                     "  {} [{}] {}",
                     gate.id,
-                    if gate.blocking { "blocking" } else { "advisory" },
+                    if gate.blocking {
+                        "blocking"
+                    } else {
+                        "advisory"
+                    },
                     gate.condition
                 );
                 println!("        {}", gate.reason);
@@ -341,12 +343,12 @@ pub fn plan(specs: &[String], config: &AzusaConfig, opts: &OutputOpts) -> Result
                     step.risk.as_str(),
                     step.description
                 );
-                println!(
-                    "        rationale: {}",
-                    step.rationale
-                );
+                println!("        rationale: {}", step.rationale);
                 if step.requires_approval {
-                    println!("        requires human approval (executed by {})", step.executed_by);
+                    println!(
+                        "        requires human approval (executed by {})",
+                        step.executed_by
+                    );
                 }
             }
             println!("artefact:  {}", path.display());

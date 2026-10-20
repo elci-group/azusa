@@ -244,7 +244,11 @@ mod tests {
     fn enrich_fills_behaviour_facet() {
         let state = enrich(workspace_state());
         let behaviour = state.behaviour.expect("behaviour facet");
-        assert!(behaviour.entry_points.contains(&"crates/b/src/main.rs".to_owned()));
+        assert!(
+            behaviour
+                .entry_points
+                .contains(&"crates/b/src/main.rs".to_owned())
+        );
         assert_eq!(
             behaviour.public_items_per_file.get("crates/a/src/lib.rs"),
             Some(&1)
@@ -272,9 +276,15 @@ mod tests {
         let paths: Vec<&str> = units.iter().map(|unit| unit.path.as_str()).collect();
         assert!(paths.contains(&".github/workflows/ci.yml"));
         assert!(paths.contains(&"k8s/api.yaml"));
-        assert!(!paths.contains(&"Cargo.toml"), "manifests are not operational");
+        assert!(
+            !paths.contains(&"Cargo.toml"),
+            "manifests are not operational"
+        );
         assert!(!paths.contains(&"README.md"));
-        let k8s = units.iter().find(|u| u.path == "k8s/api.yaml").expect("unit");
+        let k8s = units
+            .iter()
+            .find(|u| u.path == "k8s/api.yaml")
+            .expect("unit");
         assert_eq!(k8s.kind, ConfigurationKind::Kubernetes);
     }
 }

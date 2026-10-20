@@ -12,7 +12,8 @@
 use std::collections::BTreeMap;
 
 use azusa_model::{
-    ConfigurationKind, DependencyEntry, Evidence, EvidenceKind, Layer, Severity, Side,
+    ConfigurationKind, DependencyEntry, Evidence, EvidenceKind, EvidenceStrength, Layer, Severity,
+    Side,
 };
 
 use crate::engine::Draft;
@@ -140,6 +141,7 @@ pub(crate) fn compare_structure(
     if !added.is_empty() {
         drafts.push(Draft {
             category: Layer::Structure,
+            strength: EvidenceStrength::Fact,
             severity: if added.len() >= 5 {
                 Severity::High
             } else {
@@ -163,6 +165,7 @@ pub(crate) fn compare_structure(
     if !removed.is_empty() {
         drafts.push(Draft {
             category: Layer::Structure,
+            strength: EvidenceStrength::Fact,
             severity: Severity::High,
             confidence: 1.0,
             title: format!("{} module(s) present only in {a_name}", removed.len()),
@@ -183,6 +186,7 @@ pub(crate) fn compare_structure(
     if !kind_changed.is_empty() {
         drafts.push(Draft {
             category: Layer::Structure,
+            strength: EvidenceStrength::Fact,
             severity: Severity::Low,
             confidence: 1.0,
             title: format!("{} module(s) changed shape", kind_changed.len()),
@@ -209,6 +213,7 @@ pub(crate) fn compare_structure(
     if dirs_added + dirs_removed > 0 {
         drafts.push(Draft {
             category: Layer::Structure,
+            strength: EvidenceStrength::Fact,
             severity: Severity::Low,
             confidence: 0.9,
             title: format!(
@@ -284,6 +289,7 @@ pub(crate) fn compare_dependencies(
     if !added.is_empty() {
         drafts.push(Draft {
             category: Layer::Dependency,
+            strength: EvidenceStrength::Fact,
             severity: Severity::Medium,
             confidence: 1.0,
             title: format!("{} dependency(ies) declared only in {b_name}", added.len()),
@@ -299,6 +305,7 @@ pub(crate) fn compare_dependencies(
     if !removed.is_empty() {
         drafts.push(Draft {
             category: Layer::Dependency,
+            strength: EvidenceStrength::Fact,
             severity: Severity::Medium,
             confidence: 1.0,
             title: format!(
@@ -328,6 +335,7 @@ pub(crate) fn compare_dependencies(
         };
         drafts.push(Draft {
             category: Layer::Dependency,
+            strength: EvidenceStrength::Fact,
             severity,
             confidence: 1.0,
             title: format!("{} dependency version(s) changed", bumps.len()),
@@ -360,6 +368,7 @@ pub(crate) fn compare_dependencies(
         lock_weight = 1.0;
         drafts.push(Draft {
             category: Layer::Dependency,
+            strength: EvidenceStrength::Fact,
             severity: Severity::Low,
             confidence: 1.0,
             title: "lockfile diverged".into(),
@@ -487,6 +496,7 @@ pub(crate) fn compare_configuration(
         };
         drafts.push(Draft {
             category: Layer::Configuration,
+            strength: EvidenceStrength::Fact,
             severity,
             confidence: 1.0,
             title: format!("{} configuration changed: {}", paths.len(), kind.as_str()),
@@ -567,12 +577,12 @@ pub(crate) fn compare_operations(
 
     // Score: removals and reconfigurations weigh 2 (operational risk),
     // additions 1.5. k = 5: one reconfigured service ≈ 2.9, three ≈ 5.5.
-    let count =
-        2.0 * (removed.len() + reconfigured.len()) as f32 + 1.5 * added.len() as f32;
+    let count = 2.0 * (removed.len() + reconfigured.len()) as f32 + 1.5 * added.len() as f32;
 
     if !removed.is_empty() {
         drafts.push(Draft {
             category: Layer::Operational,
+            strength: EvidenceStrength::Fact,
             severity: crate::scoring::side_severity(true, direction, removed.len()),
             confidence: 1.0,
             title: format!(
@@ -593,6 +603,7 @@ pub(crate) fn compare_operations(
     if !reconfigured.is_empty() {
         drafts.push(Draft {
             category: Layer::Operational,
+            strength: EvidenceStrength::Fact,
             severity: if reconfigured.len() >= 3 {
                 Severity::High
             } else {
@@ -616,6 +627,7 @@ pub(crate) fn compare_operations(
     if !added.is_empty() {
         drafts.push(Draft {
             category: Layer::Operational,
+            strength: EvidenceStrength::Fact,
             severity: crate::scoring::side_severity(false, direction, added.len()),
             confidence: 1.0,
             title: format!(

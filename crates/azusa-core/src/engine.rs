@@ -12,8 +12,8 @@
 use azusa_diff::FilesetDiff;
 use azusa_model::{
     AnalysisMode, DRIFT_REPORT_SCHEMA_VERSION, DriftDirection, DriftObservation, DriftReport,
-    DriftRisk, DriftScore, DriftSummary, Evidence, EvidenceKind, Layer, Priority, Recommendation,
-    RepositoryInfo, RiskLevel, Severity, Side, StateRef,
+    DriftRisk, DriftScore, DriftSummary, Evidence, EvidenceKind, EvidenceStrength, Layer, Priority,
+    Recommendation, RepositoryInfo, RiskLevel, Severity, Side, StateRef,
 };
 
 use crate::config::AzusaConfig;
@@ -30,6 +30,8 @@ pub(crate) struct Draft {
     pub(crate) category: Layer,
     /// Severity of the observation.
     pub(crate) severity: Severity,
+    /// Epistemic strength: how the evidence was obtained.
+    pub(crate) strength: EvidenceStrength,
     /// Confidence in the observation, 0.0–1.0.
     pub(crate) confidence: f32,
     /// Short title.
@@ -82,6 +84,7 @@ pub fn compare(
     if digests_equal {
         drafts.push(Draft {
             category: Layer::Identity,
+            strength: EvidenceStrength::Fact,
             severity: Severity::Info,
             confidence: 1.0,
             title: "states are content-identical".into(),
@@ -102,6 +105,7 @@ pub fn compare(
     } else if unrelated {
         drafts.push(Draft {
             category: Layer::Identity,
+            strength: EvidenceStrength::Fact,
             severity: Severity::High,
             confidence: 0.9,
             title: "states appear unrelated".into(),
@@ -158,6 +162,7 @@ pub fn compare(
     for note in notes {
         drafts.push(Draft {
             category: Layer::Identity,
+            strength: EvidenceStrength::Fact,
             severity: Severity::Info,
             confidence: 1.0,
             title: "resolution note".into(),
@@ -320,6 +325,7 @@ fn push_ancestry_observations(
             };
             drafts.push(Draft {
                 category: Layer::Ancestry,
+                strength: EvidenceStrength::Fact,
                 severity,
                 confidence: 1.0,
                 title,
@@ -334,6 +340,7 @@ fn push_ancestry_observations(
         if !uncommitted.is_clean() {
             drafts.push(Draft {
                 category: Layer::Ancestry,
+                strength: EvidenceStrength::Fact,
                 severity: Severity::Medium,
                 confidence: 1.0,
                 title: "uncommitted drift present".into(),
@@ -382,6 +389,7 @@ fn ancestry_evidence(a: &azusa_model::RepositoryState) -> Vec<Evidence> {
     evidence
 }
 
+#[allow(clippy::too_many_lines)]
 fn push_filesystem_observations(
     a_name: &str,
     b_name: &str,
@@ -405,6 +413,7 @@ fn push_filesystem_observations(
         let severity = severity_for_count(added.len(), 20, 100);
         drafts.push(Draft {
             category: Layer::Filesystem,
+            strength: EvidenceStrength::Fact,
             severity,
             confidence: 1.0,
             title: format!("{} file(s) added in {b_name}", added.len()),
@@ -417,6 +426,7 @@ fn push_filesystem_observations(
         let severity = severity_for_count(deleted.len(), 10, 50).max(Severity::Medium);
         drafts.push(Draft {
             category: Layer::Filesystem,
+            strength: EvidenceStrength::Fact,
             severity,
             confidence: 1.0,
             title: format!(
@@ -438,6 +448,7 @@ fn push_filesystem_observations(
         }
         drafts.push(Draft {
             category: Layer::Filesystem,
+            strength: EvidenceStrength::Fact,
             severity,
             confidence: 1.0,
             title: format!("{} file(s) modified", modified.len()),
@@ -447,18 +458,34 @@ fn push_filesystem_observations(
         });
     }
     if !renamed.is_empty() {
+        let all_exact = diff
+            .renamed
+            .iter()
+            .all(|r| r.tier == azusa_diff::fileset::RenameTier::ExactIdentity);
+        let tier_names = diff
+            .renamed
+            .iter()
+            .map(|r| r.tier.as_str())
+            .collect::<Vec<_>>()
+            .join(", ");
         drafts.push(Draft {
             category: Layer::Filesystem,
             severity: Severity::Low,
-            confidence: 0.9,
+            strength: if all_exact {
+                EvidenceStrength::Fact
+            } else {
+                EvidenceStrength::Heuristic
+            },
+            confidence: if all_exact { 1.0 } else { 0.9 },
             title: format!("{} file(s) renamed/moved", renamed.len()),
-            detail:
-                "detected by content identity or path similarity; renames weigh half in scoring"
-                    .into(),
+            detail: format!(
+                "detected by content identity or path similarity; renames weigh half in scoring. \
+                 evidence tiers: {tier_names}"
+            ),
             side: Side::Both,
             evidence: vec![Evidence {
                 kind: EvidenceKind::Rename,
-                description: "detected moves".into(),
+                description: "detected moves (tier per pairing)".into(),
                 references: cap(&renamed),
             }],
         });
@@ -467,6 +494,7 @@ fn push_filesystem_observations(
     if mode_only > 0 {
         drafts.push(Draft {
             category: Layer::Filesystem,
+            strength: EvidenceStrength::Fact,
             severity: Severity::Low,
             confidence: 1.0,
             title: format!("{mode_only} file(s) changed executable mode only"),
@@ -656,6 +684,7 @@ fn assign_ids(drafts: Vec<Draft>) -> Vec<DriftObservation> {
             id: format!("DRIFT-{:04}", index + 1),
             category: draft.category,
             severity: draft.severity,
+            strength: draft.strength,
             confidence: (draft.confidence * 100.0).round() / 100.0,
             title: draft.title,
             detail: draft.detail,
@@ -983,7 +1012,9 @@ mod tests {
         let observation = report
             .observations
             .iter()
-            .find(|o| o.category == Layer::Interface && o.title.contains("present only in upstream"))
+            .find(|o| {
+                o.category == Layer::Interface && o.title.contains("present only in upstream")
+            })
             .expect("interface observation");
         assert_eq!(observation.severity, Severity::Medium);
         assert!(

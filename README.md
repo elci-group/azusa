@@ -73,7 +73,7 @@ Thresholds are configurable (see below), making `azusa` a CI gate.
 Every command speaks three dialects of the same facts:
 
 ```console
-$ azusa drift --json    # canonical machine contract (schema_version 1)
+$ azusa drift --json    # canonical machine contract (schema_version 2)
 $ azusa drift --ndjson  # one JSON record per observation + a summary line
 $ azusa drift --quiet   # exit codes only
 ```
@@ -95,8 +95,9 @@ L2 Filesystem    added / deleted / modified / renamed      (BLAKE3 hashes)
 L3 Structure     modules, crates, topology                (manifests + tree)
 L4 Dependencies  manifest + lockfile divergence           (semver-aware)
 L5 Configuration project configuration files             (kind-weighted)
-L6 Interfaces    public API surface                       (public item counts)
-L7 Behaviour     tests, build scripts, entry points       (facet comparison)
+L6 Interfaces    public API surface                       (symbol identities)
+L7 Behaviour     verification surface: tests, benches,     (facet comparison)
+                 entry points, build scripts
 L8 Semantics     security-critical regions                (planned)
 L9 Operations    deployment/service surface               (operational units)
 ```
@@ -119,15 +120,23 @@ From those, `azusa-graph` derives the behaviour facet: test files, benchmark
 files, executable entry points, build scripts, `#[test]` declaration counts
 and per-file public item counts (`pub fn`, `pub struct`, …).
 
-- **L6 interfaces** compares the public API surface. Items present on only
-  one side are attributed to that side; when drift direction is known,
-  items on the side reconciliation would overwrite rate **medium**
-  (high at ≥5 items) because they would vanish from the interface — items
-  on the drift source's side rate **low** (pure growth).
-- **L7 behaviour** compares tests, entry points and build scripts: removed
-  tests and deleted `#[test]` declarations rate **medium**, changed build
-  scripts (which execute at compile time) rate **medium**, additions rate
-  **low**.
+- **L6 interfaces** compares the public API at **symbol level**: each
+  side's extracted symbols (crate-relative fully qualified name, item
+  kind, normalized declaration signature) are diffed. Symbols present on
+  only one side and symbols whose signature changed with the same identity
+  are reported — a parameter-type change registers as interface drift even
+  when the symbol count is unchanged. Restricted visibility
+  (`pub(crate)`, `pub(in …)`) is excluded: it is not external API.
+  Severity is direction-aware: symbols on the side reconciliation would
+  overwrite rate **medium** (high at ≥5), drift-source-side symbols rate
+  **low**; changed signatures rate **medium** (high at ≥5).
+- **L7 behaviour** compares the verification surface — tests, benches,
+  entry points, build scripts: removed tests and deleted `#[test]`
+  declarations rate **medium**, changed build scripts (which execute at
+  compile time) rate **medium**, additions rate **low**. This is
+  verification-infrastructure topology, not runtime-behaviour analysis;
+  true behavioural drift (L8 semantics) is future work. The layer id stays
+  `behaviour` in the JSON contract for compatibility.
 - **L9 operations** compares the deployment/service surface — CI workflows,
   containers, kubernetes manifests, service units, compose stacks, framed
   as *operational units*. Units present on only one side follow the same
@@ -139,6 +148,31 @@ and per-file public item counts (`pub fn`, `pub struct`, …).
 Direction is first-class: `in-sync`, `a-to-b`, `b-to-a`, `bidirectional`,
 `unrelated`, `unknown` — with a confidence. Bidirectional drift always
 floors risk at medium, because no fast-forward path exists.
+
+**Rename confidence is explicit.** Every detected rename carries a tier:
+`exact-identity` (content hash identical — the move is a fact),
+`content-similarity` (content changed, similarity ≥ 0.9 — probable move),
+or `path-heuristic` (paired by path/size heuristics only — an association,
+not evidence). Scoring discounts renames by tier (×0.5 / ×0.75 / ×1.5):
+a weak pairing is treated almost like a distinct delete + add, because
+false rename attribution is worse than reporting the two events.
+
+## Epistemic strength
+
+Severity says how much a change matters; **strength** says how much the
+claim can be trusted. Every observation carries one of four grades:
+
+| Grade | Meaning | Examples |
+| --- | --- | --- |
+| `fact` | verified from content | digests, merge-base, exact renames, manifest/lockfile deltas |
+| `derived` | parsed from structured declarations | API symbol identities and signatures |
+| `heuristic` | inferred by proxy | lexical test inventory, path-similarity renames, intent signals |
+| `speculative` | pattern-based judgement | reserved for semantic layers |
+
+Autonomous consumers gate on strength, not severity alone: Kaptaind may
+act on `fact` and `derived` findings; `heuristic` findings warrant human
+review. Intent assessment is fully orthogonal — it never modifies the
+drift score or risk level.
 
 Scores come from documented saturating curves (`10·c/(c+k)`) over weighted
 change counts; deletions weigh double, renames half, uncommitted paths half.
@@ -294,6 +328,22 @@ production_changes = "RequireReview"    # Forbid | RequireReview | Allow
 - Azusa observes, analyses and plans; it never executes destructive Git
   operations. Kaptaind executes.
 - Local-first: no cloud services, no mandatory daemons, works offline.
+
+## Documentation
+
+The full documentation anthology lives under [`docs/`](docs/README.md) —
+role-oriented guides, machine-contract references, decision records and
+operational material:
+
+| Start here | For |
+| --- | --- |
+| [Documentation index](docs/README.md) | the map and reading paths |
+| [Quickstart](docs/guides/quickstart.md) | first fifteen minutes |
+| [CLI reference](docs/guides/cli-reference.md) | commands, flags, exit codes |
+| [Configuration](docs/guides/configuration.md) | every `azusa.toml` knob |
+| [Drift report schema](docs/reference/drift-report-schema.md) | the JSON contract |
+| [Scoring reference](docs/reference/scoring.md) | every formula and constant |
+| [Operations runbook](docs/operations/runbook.md) | triage and recovery |
 
 ## License
 

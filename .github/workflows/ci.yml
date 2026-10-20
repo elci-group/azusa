@@ -19,7 +19,23 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - name: Format
         run: cargo fmt --all --check
+      - name: Version authority is unified
+        run: |
+          ./scripts/sync-version.sh
+          git diff --exit-code Cargo.toml || {
+            echo "::error::root VERSION and workspace Cargo version diverged; commit scripts/sync-version.sh output"
+            exit 1
+          }
       - name: Clippy
         run: cargo clippy --workspace --all-targets -- -D warnings
       - name: Test
         run: cargo test --workspace
+      - name: Azusa gates itself
+        run: |
+          cargo run -q -p azusa-cli --bin azusa -- policy check --quiet
+          code=$?
+          if [ "$code" -ge 3 ]; then
+            echo "::error::azusa policy violation (exit $code)"
+            exit 1
+          fi
+          echo "azusa policy check: compliant"

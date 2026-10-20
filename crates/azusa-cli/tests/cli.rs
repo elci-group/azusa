@@ -280,8 +280,8 @@ fn policy_check_exits_three_on_violation() {
         .code(3)
         .stdout(contains("\"rule\": \"policy.max_drift\""));
 
-    let events = std::fs::read_to_string(fixture.path.join(".azusa/events.jsonl"))
-        .expect("events log");
+    let events =
+        std::fs::read_to_string(fixture.path.join(".azusa/events.jsonl")).expect("events log");
     assert!(
         events.contains("\"azusa.policy.failed\""),
         "policy failure should be emitted: {events}"
@@ -347,12 +347,20 @@ fn plan_exports_artefact_and_emits_event() {
     let parsed: serde_json::Value = serde_json::from_slice(&output).expect("json");
     let plan = &parsed["plan"];
     assert_eq!(plan["schema_version"], 1);
-    assert!(plan["steps"].as_array().expect("steps").iter().any(|s| s["kind"] == "noop"));
-    let export_path =
-        std::path::PathBuf::from(parsed["export"].as_str().expect("export path"));
-    assert!(export_path.is_file(), "plan artefact missing: {export_path:?}");
-    let events = std::fs::read_to_string(fixture.path.join(".azusa/events.jsonl"))
-        .expect("events log");
+    assert!(
+        plan["steps"]
+            .as_array()
+            .expect("steps")
+            .iter()
+            .any(|s| s["kind"] == "noop")
+    );
+    let export_path = std::path::PathBuf::from(parsed["export"].as_str().expect("export path"));
+    assert!(
+        export_path.is_file(),
+        "plan artefact missing: {export_path:?}"
+    );
+    let events =
+        std::fs::read_to_string(fixture.path.join(".azusa/events.jsonl")).expect("events log");
     assert!(
         events.contains("\"azusa.plan.generated\""),
         "plan event should be emitted: {events}"
@@ -385,7 +393,8 @@ fn plan_is_blocked_by_policy_violation() {
     assert!(
         gates
             .iter()
-            .any(|g| g["blocking"] == true && g["condition"].as_str().expect("cond").contains("policy")),
+            .any(|g| g["blocking"] == true
+                && g["condition"].as_str().expect("cond").contains("policy")),
         "policy gate should block: {gates:?}"
     );
 }
@@ -410,8 +419,8 @@ fn watch_first_cycle_analyses_and_persists_state() {
     assert_eq!(parsed["changed"], true);
     assert_eq!(parsed["stage"], 1);
     assert!(fixture.path.join(".azusa/watch.json").is_file());
-    let history = std::fs::read_to_string(fixture.path.join(".azusa/history.jsonl"))
-        .expect("history");
+    let history =
+        std::fs::read_to_string(fixture.path.join(".azusa/history.jsonl")).expect("history");
     assert_eq!(
         history.lines().count(),
         1,
@@ -450,8 +459,8 @@ fn watch_idle_cycle_skips_analysis() {
     let parsed: serde_json::Value = serde_json::from_slice(&output).expect("json");
     assert_eq!(parsed["changed"], false);
     assert_eq!(parsed["stage"], 0, "idle cycle de-escalates to stage 0");
-    let history = std::fs::read_to_string(fixture.path.join(".azusa/history.jsonl"))
-        .expect("history");
+    let history =
+        std::fs::read_to_string(fixture.path.join(".azusa/history.jsonl")).expect("history");
     assert_eq!(
         history.lines().count(),
         1,
@@ -489,11 +498,14 @@ fn watch_escalates_and_generates_plan_on_growth() {
         .stdout
         .clone();
     let parsed: serde_json::Value = serde_json::from_slice(&output).expect("json");
-    assert_eq!(parsed["stage"], 2, "score growth should escalate to stage 2");
+    assert_eq!(
+        parsed["stage"], 2,
+        "score growth should escalate to stage 2"
+    );
     let plan_path = std::path::PathBuf::from(parsed["plan"].as_str().expect("plan path"));
     assert!(plan_path.is_file(), "escalated cycle should export a plan");
-    let events = std::fs::read_to_string(fixture.path.join(".azusa/events.jsonl"))
-        .expect("events log");
+    let events =
+        std::fs::read_to_string(fixture.path.join(".azusa/events.jsonl")).expect("events log");
     assert!(
         events.contains("\"azusa.plan.generated\""),
         "escalation should emit the plan event: {events}"

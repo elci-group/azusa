@@ -380,7 +380,25 @@ pub struct OperationalState {
     pub units: Vec<OperationalUnit>,
 }
 
-/// The behaviour facet: tests, entry points, build scripts, public surface.
+/// One public API symbol extracted from a Rust source file.
+///
+/// Identity, not volume: the fully qualified name, item kind and the
+/// normalized declaration signature. Changing a parameter type changes the
+/// signature (and therefore the interface diff) even when the symbol count
+/// is unchanged. Restricted-visibility items (`pub(crate)`, `pub(in …)`)
+/// are deliberately excluded — they are not part of the external API.
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+pub struct PublicSymbol {
+    /// Fully qualified name within the crate (module path + item name).
+    pub fqn: String,
+    /// Item kind (`fn`, `struct`, `enum`, `trait`, `mod`, `const`,
+    /// `static`, `type`, `use`).
+    pub kind: String,
+    /// Normalized declaration signature (whitespace-collapsed header).
+    pub signature: String,
+}
+
+/// The behaviour facet: verification/execution surface inventory.
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub struct BehaviourState {
     /// Files recognised as tests.
@@ -393,8 +411,13 @@ pub struct BehaviourState {
     pub entry_points: Vec<String>,
     /// Build scripts (`build.rs` and equivalents).
     pub build_scripts: Vec<String>,
-    /// Public API items per Rust source file (heuristic count).
+    /// Public API declaration volume per Rust source file (unrestricted
+    /// `pub` only).
     pub public_items_per_file: BTreeMap<String, u64>,
+    /// Public API symbols per Rust source file, sorted by fully qualified
+    /// name. The L6 interface diff compares these identities — kinds and
+    /// normalized signatures — rather than counts.
+    pub public_symbols: BTreeMap<String, Vec<PublicSymbol>>,
 }
 
 /// A complete repository state: everything azusa knows about one observable

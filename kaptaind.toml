@@ -45,8 +45,9 @@ min_commit_interval = 10
 [test]
 # This workstation shadows rustup with a distro rustc at /usr/bin; pin the
 # rustup toolchain (and its rustdoc libLLVM dir) so daemon builds and test
-# hooks match interactive builds.
-command = "PATH=\"$HOME/.cargo/bin:$PATH\" LD_LIBRARY_PATH=/usr/lib/rustlib/x86_64-unknown-linux-gnu/lib cargo test"
+# hooks match interactive builds. The sync runs first so every VERSION bump
+# lands atomically with its Cargo.toml propagation (CI enforces equality).
+command = "scripts/sync-version.sh && PATH=\"$HOME/.cargo/bin:$PATH\" LD_LIBRARY_PATH=/usr/lib/rustlib/x86_64-unknown-linux-gnu/lib cargo test"
 required = true
 
 [staging]

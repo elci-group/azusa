@@ -248,11 +248,7 @@ pub fn export_plan(
         "plan": plan,
     });
     let stamp = timestamp.replace([':', '-'], "");
-    let slug = format!(
-        "{}-{}",
-        plan.repository,
-        plan.direction
-    );
+    let slug = format!("{}-{}", plan.repository, plan.direction);
     let path = directory.join(format!("plan-{stamp}-{slug}.json"));
     std::fs::write(
         &path,

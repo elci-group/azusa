@@ -64,16 +64,26 @@ pub fn ancestry_score(ancestry: &Ancestry) -> f32 {
     saturating(commits as f32 + uncommitted as f32 * 0.5, 12.0)
 }
 
-/// L2 filesystem score: deletions weigh double (removals carry more risk
-/// than additions), renames weigh half (moves are cheap to reconcile).
+/// L2 filesystem score: tier-aware rename discount plus deletions weighing
+/// double (removals carry more risk than additions).
+///
+/// Rename weights follow evidence strength: an exact-identity move is
+/// cheap to reconcile (×0.5), a content-similar pairing probable (×0.75),
+/// and a path-heuristic pairing is treated almost like a distinct delete +
+/// add (×1.5) because the association may be wrong.
 ///
 /// k = 40: 10 changed files ≈ 2.0, 40 ≈ 5.0, 120 ≈ 7.5.
 #[must_use]
 pub fn filesystem_score(diff: &FilesetDiff) -> f32 {
+    let rename_weight = |r: &azusa_diff::fileset::Rename| match r.tier {
+        azusa_diff::fileset::RenameTier::ExactIdentity => 0.5,
+        azusa_diff::fileset::RenameTier::ContentSimilarity => 0.75,
+        azusa_diff::fileset::RenameTier::PathHeuristic => 1.5,
+    };
     let count = diff.added.len() as f32
         + diff.modified.len() as f32
         + 2.0 * diff.deleted.len() as f32
-        + 0.5 * diff.renamed.len() as f32;
+        + diff.renamed.iter().map(rename_weight).sum::<f32>();
     saturating(count, 40.0)
 }
 

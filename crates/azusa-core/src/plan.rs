@@ -48,7 +48,10 @@ pub fn generate(report: &DriftReport, policy_compliant: bool) -> ReconciliationP
             steps.push(StepDraft {
                 kind: PlanStepKind::Noop,
                 description: "nothing to reconcile: states are content-identical".to_owned(),
-                rationale: format!("{} and {} agree on every path", report.state_a.spec, report.state_b.spec),
+                rationale: format!(
+                    "{} and {} agree on every path",
+                    report.state_a.spec, report.state_b.spec
+                ),
                 risk: RiskLevel::Low,
                 requires_approval: false,
                 executed_by: "kaptaind",
@@ -69,8 +72,9 @@ pub fn generate(report: &DriftReport, policy_compliant: bool) -> ReconciliationP
                 steps.push(StepDraft {
                     kind: PlanStepKind::Review,
                     description: format!("review {clusters} change cluster(s) before publishing"),
-                    rationale: "the changeset spans several logical areas; review each cluster's intent"
-                        .to_owned(),
+                    rationale:
+                        "the changeset spans several logical areas; review each cluster's intent"
+                            .to_owned(),
                     risk: RiskLevel::Low,
                     requires_approval: false,
                     executed_by: "human",
@@ -98,8 +102,9 @@ pub fn generate(report: &DriftReport, policy_compliant: bool) -> ReconciliationP
             steps.push(StepDraft {
                 kind: PlanStepKind::Push,
                 description: push_description,
-                rationale: "local state is strictly ahead; a clean fast-forward on the remote is expected"
-                    .to_owned(),
+                rationale:
+                    "local state is strictly ahead; a clean fast-forward on the remote is expected"
+                        .to_owned(),
                 risk: push_risk(report),
                 requires_approval: true,
                 executed_by: "kaptaind",
@@ -121,8 +126,9 @@ pub fn generate(report: &DriftReport, policy_compliant: bool) -> ReconciliationP
                     report.state_b.spec,
                     report.summary.commits_behind.unwrap_or(0)
                 ),
-                rationale: "remote state is strictly ahead; a fast-forward keeps local history intact"
-                    .to_owned(),
+                rationale:
+                    "remote state is strictly ahead; a fast-forward keeps local history intact"
+                        .to_owned(),
                 risk: if deletions > 0 {
                     RiskLevel::Medium
                 } else {
@@ -144,9 +150,13 @@ pub fn generate(report: &DriftReport, policy_compliant: bool) -> ReconciliationP
             for cluster in &report.clusters {
                 steps.push(StepDraft {
                     kind: PlanStepKind::Review,
-                    description: format!("review cluster `{}` ({} file(s))", cluster.label, cluster.files),
-                    rationale: "bidirectional drift requires a human merge decision per logical area"
-                        .to_owned(),
+                    description: format!(
+                        "review cluster `{}` ({} file(s))",
+                        cluster.label, cluster.files
+                    ),
+                    rationale:
+                        "bidirectional drift requires a human merge decision per logical area"
+                            .to_owned(),
                     risk: RiskLevel::Medium,
                     requires_approval: false,
                     executed_by: "human",
@@ -156,7 +166,8 @@ pub fn generate(report: &DriftReport, policy_compliant: bool) -> ReconciliationP
                 steps.push(StepDraft {
                     kind: PlanStepKind::RunTests,
                     description: "run the test suite after integrating".to_owned(),
-                    rationale: "tests or the public surface changed on at least one side".to_owned(),
+                    rationale: "tests or the public surface changed on at least one side"
+                        .to_owned(),
                     risk: RiskLevel::Low,
                     requires_approval: false,
                     executed_by: "kaptaind",
@@ -315,11 +326,11 @@ fn summarize(report: &DriftReport, steps: usize, gates: usize) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::engine::compare;
     use crate::config::AzusaConfig;
+    use crate::engine::compare;
     use crate::resolve::StateResolver;
     use azusa_git::testutil::FixtureRepo;
-    use azusa_model::{PlanStepKind, DriftDirection};
+    use azusa_model::{DriftDirection, PlanStepKind};
 
     fn report_for(fixture_root: &std::path::Path) -> DriftReport {
         let resolver = StateResolver::new(fixture_root);
@@ -373,8 +384,16 @@ mod tests {
         let report = report_for(&fixture.path);
         assert_eq!(report.direction, DriftDirection::Bidirectional);
         let plan = generate(&report, true);
-        assert!(plan.steps.iter().any(|s| s.kind == PlanStepKind::Merge && s.requires_approval));
-        assert!(plan.steps.iter().any(|s| s.kind == PlanStepKind::Push && s.requires_approval));
+        assert!(
+            plan.steps
+                .iter()
+                .any(|s| s.kind == PlanStepKind::Merge && s.requires_approval)
+        );
+        assert!(
+            plan.steps
+                .iter()
+                .any(|s| s.kind == PlanStepKind::Push && s.requires_approval)
+        );
         assert!(plan.steps.iter().any(|s| s.kind == PlanStepKind::Review));
         // High risk report → blocking acceptance gate.
         assert!(!plan.is_executable());

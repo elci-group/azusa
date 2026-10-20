@@ -52,6 +52,33 @@ pub struct ModifiedFile {
     pub mode_only: bool,
 }
 
+/// How strongly a rename pairing is evidenced.
+///
+/// Downstream systems may act causally on exact identity (the content is
+/// byte-identical); content-similarity pairings are probabilistic; a
+/// path-heuristic pairing is an association, not a demonstrated move.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum RenameTier {
+    /// Content hash identical: the move is a fact.
+    ExactIdentity,
+    /// Content changed but similarity is high (≥ 0.9): probable move.
+    ContentSimilarity,
+    /// Paired by path/size heuristics only: association, not evidence.
+    PathHeuristic,
+}
+
+impl RenameTier {
+    /// Canonical kebab-case name.
+    #[must_use]
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::ExactIdentity => "exact-identity",
+            Self::ContentSimilarity => "content-similarity",
+            Self::PathHeuristic => "path-heuristic",
+        }
+    }
+}
+
 /// One detected rename or move.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Rename {
@@ -59,10 +86,15 @@ pub struct Rename {
     pub from: String,
     /// Path in state B.
     pub to: String,
-    /// Similarity score 0.0–1.0 (1.0 = identical content).
+    /// Similarity score 0.0–1.0. For [`RenameTier::ExactIdentity`] pairings
+    /// this is content identity (1.0); for the other tiers it is primarily
+    /// path similarity — a different semantic quantity, which is why the
+    /// tier is explicit.
     pub similarity: f64,
     /// Whether content also changed during the move.
     pub content_changed: bool,
+    /// How strongly this pairing is evidenced (see [`RenameTier`]).
+    pub tier: RenameTier,
 }
 
 /// The full diff between two filesets.
@@ -193,6 +225,7 @@ fn detect_renames(diff: &mut FilesetDiff, options: &RenameOptions) {
             to: best.clone(),
             similarity: 1.0,
             content_changed: false,
+            tier: RenameTier::ExactIdentity,
         });
         diff.deleted.remove(&from);
         diff.added.remove(&best);
@@ -219,11 +252,17 @@ fn detect_renames(diff: &mut FilesetDiff, options: &RenameOptions) {
             .max_by(|x, y| x.1.partial_cmp(&y.1).expect("no NaN in similarity"));
         if let Some((to, sim, _)) = best {
             used.push(to.clone());
+            let tier = if sim >= 0.9 {
+                RenameTier::ContentSimilarity
+            } else {
+                RenameTier::PathHeuristic
+            };
             diff.renamed.push(Rename {
                 from: from.clone(),
                 to: to.clone(),
                 similarity: sim,
                 content_changed: true,
+                tier,
             });
             diff.added.remove(&to);
             diff.deleted.remove(&from);
